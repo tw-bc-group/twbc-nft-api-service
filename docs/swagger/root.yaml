@@ -1,0 +1,17 @@
+tags:
+  - name: Welcome
+    description: Welcome NFT API
+
+paths:
+  /:
+    get:
+      tags:
+        - Welcome
+      summary: Welcome
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+
+
