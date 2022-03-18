@@ -12,6 +12,7 @@ class NftRoute implements Routes {
   }
 
   private initializeRoutes() {
+    this.router.get(`${this.path}/`, this.nftController.getNftById);
     this.router.get(`${this.path}/list`, this.nftController.list);
     // TODO 其他接口
   }

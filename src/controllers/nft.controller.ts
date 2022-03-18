@@ -17,6 +17,15 @@ class NftController {
       next(error);
     }
   };
+  public getNftById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.query.id);
+      const nft: Nft = await this.nftService.findNftById(id);
+      res.status(200).json(this.resultService.toSuccess(nft));
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default NftController;
