@@ -19,7 +19,6 @@ There are endless badges that you could use in your projects. And they do depend
 I use [**Shields IO**](https://shields.io/) for making badges. It is a simple and easy to use tool that you can use for almost all your badge cravings. -->
 
 <!-- Some badges that you could use -->
-
 <!-- ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/navendu-pottekkat/awesome-readme?include_prereleases)
 : This badge shows the version of the current release.
 
@@ -39,7 +38,8 @@ I use [**Shields IO**](https://shields.io/) for making badges. It is a simple an
 
 ![Tweet](https://img.shields.io/twitter/url?style=flat-square&logo=twitter&url=https%3A%2F%2Fnavendu.me%2Fnsfw-filter%2Findex.html): This is not essential but it is a cool way to let others know about your project! Clicking this button automatically opens twitter and writes a tweet about your project and link to it. All the user has to do is to click tweet. Isn't that neat? -->
 
-# Demo-Preview
+<!--# Demo-Preview-->
+
 
 <!-- Add a demo for your project -->
 
@@ -49,12 +49,12 @@ Here is a random GIF as a placeholder.
 
 ![Random GIF](https://media.giphy.com/media/ZVik7pBtu9dNS/giphy.gif) -->
 
-# Table of contents
+<!--# Table of contents-->
 
 <!-- After you have introduced your project, it is a good idea to add a **Table of contents** or **TOC** as **cool** people say it. This would make it easier for people to navigate through your README and find exactly what they are looking for.
 
 Here is a sample TOC(*wow! such cool!*) that is actually the TOC for this README. -->
-
+<!--
 - [Project Title](#project-title)
 - [Demo-Preview](#demo-preview)
 - [Table of contents](#table-of-contents)
@@ -65,10 +65,16 @@ Here is a sample TOC(*wow! such cool!*) that is actually the TOC for this README
   - [Sponsor](#sponsor)
   - [Adding new features or fixing bugs](#adding-new-features-or-fixing-bugs)
 - [License](#license)
-- [Footer](#footer)
+- [Footer](#footer)-->
 
 # Installation
 [(Back to top)](#table-of-contents)
+
+* Run the Server in production mode : `npm run start` or `Start typescript-express-starter`
+* Run the Server in development mode : `npm run dev` or Dev `typescript-express-starter`
+* Run all unit-tests : `npm test` or `Test typescript-express-starter`
+* Check for linting errors : `npm run lint` or `Lint typescript-express-starter`
+* Fix for linting : `npm run lint:fix` or `Lint:Fix typescript-express-starter`
 
 <!-- *You might have noticed the **Back to top** button(if not, please notice, it's right there!). This is a good idea because it makes your README **easy to navigate.***
 
