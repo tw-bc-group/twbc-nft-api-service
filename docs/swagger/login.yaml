@@ -1,0 +1,54 @@
+tags:
+  - name: login
+    description: auth actions
+
+paths:
+
+  # [POST] login
+  '/login':
+    post:
+      tags:
+        - login
+      parameters:
+        - name: body
+          in: body
+          description: nft data
+          required: true
+          schema:
+            $ref: '#/definitions/Login'
+      responses:
+        200:
+          description: logined successfully!
+          schema:
+            $ref: '#/definitions/LoginResult'
+        400:
+          description: 'Bad Request'
+        500:
+          description: 'Server Error'
+
+# definitions
+definitions:
+  Login:
+    type: object
+    properties:
+      username:
+        type: string
+        description: the unique username of a user to login
+      password:
+        type: string
+        description: the password of the username
+  LoginResult:
+    type: object
+    properties:
+      name:
+        type: string
+        description: the name of a user
+      username:
+        type: string
+        description: the unique username of a user to login
+      mail:
+        type: string
+        description: email address
+      token:
+        type: string
+        description: the valid token
