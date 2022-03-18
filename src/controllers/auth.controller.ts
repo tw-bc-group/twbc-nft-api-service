@@ -1,42 +1,23 @@
 import { NextFunction, Request, Response } from 'express';
-import { CreateUserDto } from '@dtos/users.dto';
-import { User } from '@interfaces/users.interface';
-import { RequestWithUser } from '@interfaces/auth.interface';
+import { NftUserDto } from '@dtos/nftUsers.dto';
 import AuthService from '@services/auth.service';
+import ResultService from '@services/result.service';
 
 class AuthController {
   public authService = new AuthService();
-
-  public signUp = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const userData: CreateUserDto = req.body;
-      const signUpUserData: User = await this.authService.signup(userData);
-
-      res.status(201).json({ data: signUpUserData, message: 'signup' });
-    } catch (error) {
-      next(error);
-    }
-  };
-
+  public resultService = new ResultService();
   public logIn = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userData: CreateUserDto = req.body;
-      const { cookie, findUser } = await this.authService.login(userData);
+      const username = String(req.params.username);
+      const password = String(req.params.password);
+
+      console.log('username:' + username + ', password:' + password);
+      const nftUserDto = new NftUserDto(username, password);
+
+      const { tokenData, cookie, userInfo } = await this.authService.login(nftUserDto);
 
       res.setHeader('Set-Cookie', [cookie]);
-      res.status(200).json({ data: findUser, message: 'login' });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  public logOut = async (req: RequestWithUser, res: Response, next: NextFunction) => {
-    try {
-      const userData: User = req.user;
-      const logOutUserData: User = await this.authService.logout(userData);
-
-      res.setHeader('Set-Cookie', ['Authorization=; Max-age=0']);
-      res.status(200).json({ data: logOutUserData, message: 'logout' });
+      res.status(200).json(this.resultService.toSuccess({ ...userInfo, token: tokenData.token }));
     } catch (error) {
       next(error);
     }

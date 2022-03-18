@@ -2,7 +2,7 @@ import { compare, hash } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { SECRET_KEY } from '@config';
 import DB from '@databases';
-import { CreateUserDto } from '@dtos/users.dto';
+import { NftUserDto } from '@dtos/nftUsers.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { DataStoredInToken, TokenData } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
@@ -11,31 +11,14 @@ import { isEmpty } from '@utils/util';
 class AuthService {
   public users = DB.Users;
 
-  public async signup(userData: CreateUserDto): Promise<User> {
-    if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
-
-    const findUser: User = await this.users.findOne({ where: { email: userData.email } });
-    if (findUser) throw new HttpException(409, `You're email ${userData.email} already exists`);
-
-    const hashedPassword = await hash(userData.password, 10);
-    const createUserData: User = await this.users.create({ ...userData, password: hashedPassword });
-
-    return createUserData;
-  }
-
-  public async login(userData: CreateUserDto): Promise<{ cookie: string; findUser: User }> {
-    if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
-
-    const findUser: User = await this.users.findOne({ where: { email: userData.email } });
-    if (!findUser) throw new HttpException(409, `You're email ${userData.email} not found`);
-
-    const isPasswordMatching: boolean = await compare(userData.password, findUser.password);
-    if (!isPasswordMatching) throw new HttpException(409, "You're password not matching");
-
-    const tokenData = this.createToken(findUser);
+  public async login(userData: NftUserDto): Promise<{ tokenData: TokenData; cookie: string; userInfo: any }> {
+    const tokenData = this.createToken(userData);
     const cookie = this.createCookie(tokenData);
 
-    return { cookie, findUser };
+    // mock
+    const userInfo = { name: '管理员', username: userData.username, mail: '123@thoughtworks.com' };
+
+    return { tokenData, cookie, userInfo };
   }
 
   public async logout(userData: User): Promise<User> {
@@ -47,8 +30,8 @@ class AuthService {
     return findUser;
   }
 
-  public createToken(user: User): TokenData {
-    const dataStoredInToken: DataStoredInToken = { id: user.id };
+  public createToken(user: NftUserDto): TokenData {
+    const dataStoredInToken: DataStoredInToken = { username: user.username };
     const secretKey: string = SECRET_KEY;
     const expiresIn: number = 60 * 60;
 
