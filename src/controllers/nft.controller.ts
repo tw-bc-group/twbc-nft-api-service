@@ -1,27 +1,47 @@
 import { NextFunction, Request, Response } from 'express';
-import { Nft } from '@interfaces/nft.interface';
 import nftService from '@services/nft.service';
 import resultService from '@services/result.service';
-import { Page } from '@/vo/page.vo';
+import { mock } from '@utils/mock';
 
 class NftController {
   public nftService = new nftService();
   public resultService = new resultService();
 
-  public list = async (req: Request, res: Response, next: NextFunction) => {
+  public getNfts = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const nftList: Page = await this.nftService.list();
-
-      res.status(200).json(this.resultService.toSuccess(nftList));
+      res.status(200).json(this.resultService.toSuccess(mock('../../data/NftList.json')));
     } catch (error) {
       next(error);
     }
   };
+
+  public getTransferedNft = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      res.status(200).json(this.resultService.toSuccess(mock('../../data/TransferedNftList.json')));
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public getNftById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id = Number(req.query.id);
-      const nft: Nft = await this.nftService.findNftById(id);
-      res.status(200).json(this.resultService.toSuccess(nft));
+      res.status(200).json(this.resultService.toSuccess(mock('../../data/NftDetail.json')));
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public createNft = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      res.status(200).json(this.resultService.toSuccess(mock('../../data/NftCreatedSuccessfully.json')));
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public transferNft = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      res.status(200).json(this.resultService.toSuccess(mock('../../data/TransferedSuccfully.json')));
     } catch (error) {
       next(error);
     }
