@@ -11,7 +11,7 @@ paths:
         - file
       summary: upload file
       consumes:
-      - multipart/form-data
+        - multipart/form-data
       parameters:
         - name: file
           in: formData
@@ -31,12 +31,6 @@ definitions:
   UploadedFile:
     type: object
     properties:
-      url:
-        type: string
-        description: the url of the file when it's uploaded successfully!
-  ResponseData:
-    type: object
-    properties:
       code:
         type: integer
         description: customed code
@@ -44,47 +38,8 @@ definitions:
         type: string
         description: the message from backend
       data:
-        $ref: '#/definitions/UploadedFile'
-  PageDataOfNft:
-    type: object
-    properties:
-      start:
-        type: integer
-        description: start number of the result
-      limit:
-        type: integer
-        description: limit number of the result
-      totalPages:
-        type: integer
-        description: total pages of the result
-      details:
-        type: array
-        items:
-          $ref: '#/definitions/PagedNft'
-  PagedNft:
-    type: object
-    properties:
-      id:
-        type: integer
-        description: database id
-      nid:
-        type: string
-        description: nft id
-      name:
-        type: string
-        description: nft name
-      address:
-        type: string
-        description: address of a nft
-      createdAt:
-        type: integer
-        description: the time of when the nft is created
-  TranserNft:
-    type: object
-    properties:
-      id:
-        type: integer
-        description: database id
-      address:
-        type: string
-        description: targer address to transfer
+        type: object
+        properties:
+          url:
+            type: string
+            description: the url of the file when it's uploaded successfully!

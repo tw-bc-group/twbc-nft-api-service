@@ -15,7 +15,7 @@ paths:
           description: nft data
           required: true
           schema:
-            $ref: '#/definitions/Login'
+            $ref: '#/definitions/LoginDTO'
       responses:
         200:
           description: logined successfully!
@@ -28,7 +28,7 @@ paths:
 
 # definitions
 definitions:
-  Login:
+  LoginDTO:
     type: object
     properties:
       username:
@@ -40,15 +40,24 @@ definitions:
   LoginResult:
     type: object
     properties:
-      name:
+      code:
+        type: integer
+        description: customed code
+      messages:
         type: string
-        description: the name of a user
-      username:
-        type: string
-        description: the unique username of a user to login
-      mail:
-        type: string
-        description: email address
-      token:
-        type: string
-        description: the valid token
+        description: the message from backend
+      data:
+        type: object
+        properties:
+          name:
+            type: string
+            description: the name of a user
+          username:
+            type: string
+            description: the unique username of a user to login
+          mail:
+            type: string
+            description: email address
+          token:
+            type: string
+            description: the valid token

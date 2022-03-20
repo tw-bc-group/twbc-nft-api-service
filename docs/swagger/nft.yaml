@@ -45,7 +45,7 @@ paths:
           description: nft data
           required: true
           schema:
-            $ref: '#/definitions/Nft'
+            $ref: '#/definitions/CreateNft'
       responses:
         201:
           description: 'Created'
@@ -87,7 +87,9 @@ paths:
           type: integer
       responses:
         200:
-          description: 'OK'
+          description: details of a specified nft
+          schema:
+            $ref: '#/definitions/NftDetail'
         404:
           description: 'cannot find the nft'
         500:
@@ -96,7 +98,7 @@ paths:
 
 # definitions
 definitions:
-  Nft:
+  CreateNft:
     type: object
     properties:
       count:
@@ -107,29 +109,37 @@ definitions:
         description: nft id
   NftDetail:
     type: object
-    properties:
-      id:
-        type: integer
-        description: database id
-      nid:
-        type: string
-        description: nft id
-      name:
-        type: string
-        description: nft name
-      imageUrl:
-        type: string
-        description: nft's image url
-      address:
-        type: string
-        description: address of a nft
-      createdAt:
-        type: integer
-        description: the time of when the nft is created
-      createdBy:
-        type: string
-        description: who created the nft
-  PageData:
+    code:
+      type: integer
+      description: customed code
+    messages:
+      type: string
+      description: the message from backend
+    data:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: database id
+        nid:
+          type: string
+          description: nft id
+        name:
+          type: string
+          description: nft name
+        imageUrl:
+          type: string
+          description: nft's image url
+        address:
+          type: string
+          description: address of a nft
+        createdAt:
+          type: integer
+          description: the time of when the nft is created
+        createdBy:
+          type: string
+          description: who created the nft
+  PagedNft:
     type: object
     properties:
       code:
@@ -139,41 +149,36 @@ definitions:
         type: string
         description: the message from backend
       data:
-        $ref: '#/definitions/PageDataOfNft'
-  PageDataOfNft:
-    type: object
-    properties:
-      start:
-        type: integer
-        description: start number of the result
-      limit:
-        type: integer
-        description: limit number of the result
-      totalPages:
-        type: integer
-        description: total pages of the result
-      details:
-        type: array
-        items:
-          $ref: '#/definitions/PagedNft'
-  PagedNft:
-    type: object
-    properties:
-      id:
-        type: integer
-        description: database id
-      nid:
-        type: string
-        description: nft id
-      name:
-        type: string
-        description: nft name
-      address:
-        type: string
-        description: address of a nft
-      createdAt:
-        type: integer
-        description: the time of when the nft is created
+        type: object
+        properties:
+          start:
+            type: integer
+            description: start number of the result
+          limit:
+            type: integer
+            description: limit number of the result
+          totalPages:
+            type: integer
+            description: total pages of the result
+          details:
+            type: array
+            items:
+              properties:
+                id:
+                  type: integer
+                  description: database id
+                nid:
+                  type: string
+                  description: nft id
+                name:
+                  type: string
+                  description: nft name
+                address:
+                  type: string
+                  description: address of a nft
+                createdAt:
+                  type: integer
+                  description: the time of when the nft is created
   TranserNft:
     type: object
     properties:
