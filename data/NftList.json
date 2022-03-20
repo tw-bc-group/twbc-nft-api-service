@@ -1,0 +1,47 @@
+{
+  "code": 2002000,
+  "message": "success",
+  "data": {
+    "start": 1,
+    "limit": 10,
+    "totalPage": 50,
+    "details": [
+      {
+        "name": "Bored Ape",
+        "id": 1,
+        "address": "0xcafebabe1",
+        "createdAt": 1647570843000
+      },
+      {
+        "name": "Mutant Ape",
+        "id": 2,
+        "address": "0xcafebabe2",
+        "createdAt": 1647570843000
+      },
+      {
+        "name": "Crypto Punk",
+        "id": 3,
+        "address": "0xcafebabe3",
+        "createdAt": 1647570843000
+      },
+      {
+        "name": "Meetbits",
+        "id": 4,
+        "address": "0xcafebabe4",
+        "createdAt": 1647570843000
+      },
+      {
+        "name": "Antonym GENESIS",
+        "id": 5,
+        "address": "0xcafebabe5",
+        "createdAt": 1647570843000
+      },
+      {
+        "name": "Azuki",
+        "id": 6,
+        "address": "0xcafebabe6",
+        "createdAt": 1647570843000
+      }
+    ]
+  }
+}
