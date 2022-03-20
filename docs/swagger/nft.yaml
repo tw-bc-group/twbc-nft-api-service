@@ -8,7 +8,7 @@ paths:
     get:
       tags:
         - nft
-      summary: find nfts
+      summary: get a list of nft
       parameters:
         - name: start
           in: query
@@ -73,6 +73,36 @@ paths:
           description: 'Bad Request'
         500:
           description: 'Server Error'
+  # [GET] transfered nft
+  '/nft/transfered':
+    get:
+      tags:
+        - nft
+      summary: get a list of transfered nft
+      parameters:
+        - name: start
+          in: query
+          description: start number of the result
+          required: false
+          type: integer
+          x-example: 0
+        - name: limit
+          in: query
+          description: limit number of the result
+          required: false
+          type: integer
+          x-example: 10
+      responses:
+        200:
+          description: The paged data points for transfered nft were loaded successfully!
+          schema:
+            $ref: '#/definitions/PagedNft'
+        401:
+          description: You are not authorized to view the resource
+        404:
+          description: 'cannot find the nft'
+        500:
+          description: some services were broken
   # [GET] nft/id
   /nft/{id}:
     get:
@@ -104,6 +134,9 @@ definitions:
       count:
         type: integer
         description: database id
+      name:
+        type: string
+        description: name of a nft
       imageUrl:
         type: string
         description: nft id
@@ -127,6 +160,9 @@ definitions:
         name:
           type: string
           description: nft name
+        count:
+          type: integer
+          description: counts of nft
         imageUrl:
           type: string
           description: nft's image url
