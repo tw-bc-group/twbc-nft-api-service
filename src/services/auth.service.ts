@@ -1,4 +1,3 @@
-import { compare, hash } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { SECRET_KEY } from '@config';
 import DB from '@databases';
@@ -15,7 +14,7 @@ class AuthService {
     const tokenData = this.createToken(userData);
     const cookie = this.createCookie(tokenData);
 
-    // mock
+    // TODO 获取用户信息
     const userInfo = { name: '管理员', username: userData.username, mail: '123@thoughtworks.com' };
 
     return { tokenData, cookie, userInfo };

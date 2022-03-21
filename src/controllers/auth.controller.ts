@@ -8,11 +8,7 @@ class AuthController {
   public resultService = new ResultService();
   public logIn = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const username = String(req.params.username);
-      const password = String(req.params.password);
-
-      console.log('username:' + username + ', password:' + password);
-      const nftUserDto = new NftUserDto(username, password);
+      const nftUserDto = new NftUserDto(String(req.query.username), String(req.query.password));
 
       const { tokenData, cookie, userInfo } = await this.authService.login(nftUserDto);
 
