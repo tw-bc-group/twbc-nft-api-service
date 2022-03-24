@@ -4,6 +4,7 @@ import request from 'supertest';
 import App from '@/app';
 import { CreateUserDto } from '@dtos/users.dto';
 import AuthRoute from '@routes/auth.route';
+import UsersRoute from '../routes/users.route';
 
 afterAll(async () => {
   await new Promise<void>(resolve => setTimeout(() => resolve(), 500));
@@ -17,8 +18,8 @@ describe('Testing Auth', () => {
         password: 'q1w2e3r4!',
       };
 
-      const authRoute = new AuthRoute();
-      const users = authRoute.authController.authService.users;
+      const usersRoute = new UsersRoute();
+      const users = usersRoute.usersController.userService.users;
 
       users.findOne = jest.fn().mockReturnValue(null);
       users.create = jest.fn().mockReturnValue({
@@ -28,8 +29,8 @@ describe('Testing Auth', () => {
       });
 
       (Sequelize as any).authenticate = jest.fn();
-      const app = new App([authRoute]);
-      return request(app.getServer()).post(`${authRoute.path}signup`).send(userData).expect(201);
+      const app = new App([usersRoute]);
+      return request(app.getServer()).post(`${usersRoute.path}`).send(userData).expect(201);
     });
   });
 
@@ -54,7 +55,8 @@ describe('Testing Auth', () => {
       return request(app.getServer())
         .post(`${authRoute.path}login`)
         .send(userData)
-        .expect('Set-Cookie', /^Authorization=.+/);
+        .expect('Set-Cookie', /^Authorization=.+/)
+        .expect(200);
     });
   });
 

@@ -8,12 +8,13 @@ class AuthController {
   public resultService = new ResultService();
   public logIn = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      if (!req.query.email || !req.query.password) {
+      if (!req.body.email || !req.body.password) {
         next(new HttpException(404, 'Query email and password are required'));
       }
+
       const { tokenData, cookie, userInfo } = await this.authService.login({
-        email: req.query.email?.toString(),
-        password: req.query.password?.toString(),
+        email: req.body.email?.toString(),
+        password: req.body.password?.toString(),
       });
 
       res.setHeader('Set-Cookie', [cookie]);
