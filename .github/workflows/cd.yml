@@ -48,5 +48,5 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           CHART: ./helm
         run: |
-          helm -n $NAMESPACE upgrade --install $RELEASE_NAME $CHART --set image.tag=$IMAGE_TAG --set image.repository=$ECR_REGISTRY/$ECR_REPOSITORY
+          helm -n $KUBE_NAMESPACE upgrade --install $RELEASE_NAME $CHART --set image.tag=$IMAGE_TAG --set image.repository=$ECR_REGISTRY/$ECR_REPOSITORY
 
