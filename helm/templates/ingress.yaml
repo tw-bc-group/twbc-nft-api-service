@@ -20,7 +20,9 @@ spec:
     - host: {{ .Values.host }}
       http:
         paths:
-          - backend:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
               service:
                 name:  {{ include "twbc-nft-api-service.fullname" . }}
                 port:
