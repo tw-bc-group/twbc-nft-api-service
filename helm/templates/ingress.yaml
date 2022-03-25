@@ -21,5 +21,7 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: twbc-nft-api-service
-              servicePort: {{ .Values.service.port }}
+              service:
+                name:  {{ include "twbc-nft-api-service.fullname" . }}
+                port:
+                  number: {{ .Values.service.port }}
