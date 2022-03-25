@@ -46,8 +46,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 Selector labels
 */}}
 {{- define "twbc-nft-api-service.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "twbc-nft-api-service.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app: {{ include "twbc-nft-api-service.name" . }}
 {{- end }}
 
 {{/*

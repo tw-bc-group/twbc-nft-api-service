@@ -11,8 +11,8 @@ image:
   tag: "latest"
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: "twbc-nft-api-service"
+fullnameOverride: "twbc-nft-api-service"
 
 serviceAccount:
   # Specifies whether a service account should be created
