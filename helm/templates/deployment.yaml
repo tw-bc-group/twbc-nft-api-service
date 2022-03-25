@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "twbc-nft-api-service.fullname" . }}
+  name: {{ include "twbc-nft-api-service.fullname" . }}-deployment
   labels:
     {{- include "twbc-nft-api-service.labels" . | nindent 4 }}
 spec:
