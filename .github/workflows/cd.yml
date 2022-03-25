@@ -1,0 +1,53 @@
+name: 'NFT-API-CD'
+
+on:
+  push:
+    branches: ['main']
+
+jobs:
+  env:
+    RELEASE_NAME: twbc-nft-api-service
+    KUBE_NAMESPACE: twbc-nft
+    ECR_REPOSITORY: twbc-nft/api-service
+    IMAGE_TAG: build-${{ github.RUN_NUMBER }}
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        id: login-ecr
+
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Write kubeconfig file
+        run: |
+          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name  ${{ secrets.EKS_CLUSTER_NAME }}
+
+      - name: Create namespace if not exist
+        run: |
+          kubectl get namespaces $KUBE_NAMESPACE || kubectl create namespace $KUBE_NAMESPACE
+
+      - name: deploy to cluster
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          CHART: ./helm
+        run: |
+          helm -n $NAMESPACE upgrade --install $RELEASE_NAME $CHART --set image.tag=$IMAGE_TAG --set image.repository=$ECR_REGISTRY/$ECR_REPOSITORY
+
