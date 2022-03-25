@@ -5,14 +5,13 @@ on:
     branches: ['main']
 
 jobs:
-  env:
-    RELEASE_NAME: twbc-nft-api-service
-    KUBE_NAMESPACE: twbc-nft
-    ECR_REPOSITORY: twbc-nft/api-service
-    IMAGE_TAG: build-${{ github.RUN_NUMBER }}
-
   deploy:
     runs-on: ubuntu-latest
+    env:
+      RELEASE_NAME: twbc-nft-api-service
+      KUBE_NAMESPACE: twbc-nft
+      ECR_REPOSITORY: twbc-nft/api-service
+      IMAGE_TAG: build-${{ github.RUN_NUMBER }}
 
     steps:
       - name: Checkout
