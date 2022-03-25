@@ -47,7 +47,7 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: dev.api.nft.blockchain.thoughtworks.cn
+    - host: dev.api.nft.cn.blockchain.thoughtworks.cn
       paths:
         - path: /
           pathType: ImplementationSpecific
