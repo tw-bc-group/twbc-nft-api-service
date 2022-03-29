@@ -10,10 +10,7 @@ import bcrypt from 'bcrypt';
 class AuthService {
   public users = DB.Users;
 
-  public async login(userData: {
-    email: string;
-    password: string;
-  }): Promise<{ tokenData: TokenData; cookie: string; userInfo: { id: number; email: string } }> {
+  public async login(userData: { email: string; password: string }): Promise<{ tokenData: TokenData; userInfo: { id: number; email: string } }> {
     const findUser = await this.users.findOne({
       where: {
         email: userData.email,
@@ -27,8 +24,7 @@ class AuthService {
       throw new HttpException(401, 'Email or password are not correct');
     }
     const tokenData = this.createToken(findUser);
-    const cookie = this.createCookie(tokenData);
-    return { tokenData, cookie, userInfo: { id: findUser.id, email: findUser.email } };
+    return { tokenData, userInfo: { id: findUser.id, email: findUser.email } };
   }
 
   public async logout(userData: User): Promise<User> {
@@ -46,10 +42,6 @@ class AuthService {
     const expiresIn: number = 60 * 60;
 
     return { expiresIn, token: sign(dataStoredInToken, secretKey, { expiresIn }) };
-  }
-
-  public createCookie(tokenData: TokenData): string {
-    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`;
   }
 }
 

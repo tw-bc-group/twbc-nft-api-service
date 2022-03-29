@@ -12,12 +12,11 @@ class AuthController {
         next(new HttpException(404, 'Query email and password are required'));
       }
 
-      const { tokenData, cookie, userInfo } = await this.authService.login({
+      const { tokenData, userInfo } = await this.authService.login({
         email: req.body.email?.toString(),
         password: req.body.password?.toString(),
       });
 
-      res.setHeader('Set-Cookie', [cookie]);
       res.status(200).json(this.resultService.toSuccess({ ...userInfo, token: tokenData.token }));
     } catch (error) {
       next(error);
