@@ -1,3 +1,5 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Create bucket to store nft images
 Resources:
   S3:
     Type: AWS::S3::Bucket
