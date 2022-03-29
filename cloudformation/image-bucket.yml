@@ -34,7 +34,7 @@ Resources:
               Effect: Allow
               Principal:
                 AWS:
-                  - arn:aws-cn:iam::${AWS::AccountId}:role/TWBCEksWorkerRole
+                  - !Sub arn:aws-cn:iam::${AWS::AccountId}:role/TWBCEksWorkerRole
               Action:
                 - s3:PutObject
                 - s3:PutObjectAcl
