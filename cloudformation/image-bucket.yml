@@ -23,19 +23,14 @@ Resources:
         PolicyDocument:
           Version: '2012-10-17'
           Statement:
-            - Sid: AllowGetListObjects
-              Effect: Allow
-              Principal: "*"
-              Action: 
-                - s3:List*
-                - s3:get*
-              Resource: !Sub ${S3.Arn}/*
-            - Sid: AllowPutObjects
+            - Sid: AllowListPutObjects
               Effect: Allow
               Principal:
                 AWS:
                   - !Sub arn:aws-cn:iam::${AWS::AccountId}:role/TWBCEksWorkerRole
               Action:
+                - s3:List*
+                - s3:get*
                 - s3:PutObject
                 - s3:PutObjectAcl
               Resource: !Sub ${S3.Arn}/*
