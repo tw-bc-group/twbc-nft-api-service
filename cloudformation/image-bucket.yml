@@ -1,0 +1,38 @@
+Resources:
+  S3:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: twbc-nft-images
+      AccessControl: Private
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - "*"
+            AllowedMethods:
+              - GET
+              - PUT
+              - HEAD
+            AllowedOrigins: "*" # TODO:// change to nft portal origin
+  BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: !Ref S3
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Sid: AllowGetListObjects
+              Effect: Allow
+              Principal: "*"
+              Action: 
+                - s3:List*
+                - s3:get*
+              Resource: !Sub ${S3.Arn}/*
+            - Sid: AllowPutObjects
+              Effect: Allow
+              Principal:
+                AWS:
+                  - arn:aws-cn:iam::${AWS::AccountId}:role/TWBCEksWorkerRole
+              Action:
+                - s3:PutObject
+                - s3:PutObjectAcl
+              Resource: !Sub ${S3.Arn}/*
