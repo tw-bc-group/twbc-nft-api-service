@@ -14,7 +14,8 @@ Resources:
               - GET
               - PUT
               - HEAD
-            AllowedOrigins: "*" # TODO:// change to nft portal origin
+            AllowedOrigins: 
+              - "*" # TODO:// change to nft portal origin
   BucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
