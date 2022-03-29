@@ -137,7 +137,7 @@ definitions:
     properties:
       count:
         type: integer
-        description: database id
+        description: counts of nft
       name:
         type: string
         description: name of a nft
@@ -146,39 +146,37 @@ definitions:
         description: nft id
   NftDetail:
     type: object
-    code:
-      type: integer
-      description: customed code
-    messages:
-      type: string
-      description: the message from backend
-    data:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: database id
-        nid:
-          type: string
-          description: nft id
-        name:
-          type: string
-          description: nft name
-        count:
-          type: integer
-          description: counts of nft
-        imageUrl:
-          type: string
-          description: nft's image url
-        address:
-          type: string
-          description: address of a nft
-        createdAt:
-          type: integer
-          description: the time of when the nft is created
-        createdBy:
-          type: string
-          description: who created the nft
+    properties:
+      code:
+        type: integer
+        description: customed code
+      messages:
+        type: string
+        description: the message from backend
+      data:
+        type: object
+        properties:
+          id:
+            type: string
+            description: nft id
+          name:
+            type: string
+            description: nft name
+          imageUrl:
+            type: string
+            description: nft's image url
+          mintedAt:
+            type: integer
+            description: the time of when the nft is created
+          mintedBy:
+            type: string
+            description: who created the nft
+          updatedAt:
+            type: integer
+            description: the time of when the nft is updated
+          count:
+            type: integer
+            description: counts of total nft in the same denom
   PagedNft:
     type: object
     properties:
@@ -205,26 +203,35 @@ definitions:
             items:
               properties:
                 id:
-                  type: integer
-                  description: database id
-                nid:
                   type: string
                   description: nft id
                 name:
                   type: string
                   description: nft name
-                address:
+                imageUrl:
                   type: string
-                  description: address of a nft
-                createdAt:
+                  description: nft's image url
+                mintedAt:
                   type: integer
                   description: the time of when the nft is created
+                mintedBy:
+                  type: string
+                  description: who created the nft
+                updatedAt:
+                  type: integer
+                  description: the time of when the nft is updated
+                count:
+                  type: integer
+                  description: counts of total nft in the same denom 
   TranserNft:
     type: object
     properties:
       id:
-        type: integer
-        description: database id
+        type: string
+        description: nft id
+      denomId:
+        type: string
+        description: denom id
       address:
         type: string
         description: targer address to transfer

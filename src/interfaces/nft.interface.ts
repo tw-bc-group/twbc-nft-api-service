@@ -1,8 +1,10 @@
 export interface Nft {
-  id: number;
+  id: string;
+  denomId: string;
   name: string;
-  address: String;
-  createdAt: number;
-  updatedAt?: number;
   imageUrl?: string;
+  owner: string;
+  minter: string;
+  mintedAt: number;
+  updatedAt?: number;
 }
