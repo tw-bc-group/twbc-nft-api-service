@@ -58,7 +58,7 @@ class App {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
 
-    this.app.use(authMiddleware);
+    // this.app.use(authMiddleware);
   }
 
   private initializeRoutes(routes: Routes[]) {
