@@ -1,15 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import nftService from '@services/nft.service';
-import resultService from '@services/result.service';
 import { mock } from '@utils/mock';
 
 class NftController {
   public nftService = new nftService();
-  public resultService = new resultService();
 
   public getNfts = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      res.status(200).json(this.resultService.toSuccess(mock('../../data/NftList.json')));
+      res.status(200).json(mock('../../data/NftList.json'));
     } catch (error) {
       next(error);
     }
@@ -17,7 +15,7 @@ class NftController {
 
   public getTransferedNft = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      res.status(200).json(this.resultService.toSuccess(mock('../../data/TransferedNftList.json')));
+      res.status(200).json(mock('../../data/TransferedNftList.json'));
     } catch (error) {
       next(error);
     }
@@ -25,7 +23,7 @@ class NftController {
 
   public getNftById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      res.status(200).json(this.resultService.toSuccess(mock('../../data/NftDetail.json')));
+      res.status(200).json(mock('../../data/NftDetail.json'));
     } catch (error) {
       next(error);
     }
@@ -33,7 +31,7 @@ class NftController {
 
   public createNft = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      res.status(200).json(this.resultService.toSuccess(mock('../../data/NftCreatedSuccessfully.json')));
+      res.status(200).json(mock('../../data/NftCreatedSuccessfully.json'));
     } catch (error) {
       next(error);
     }
@@ -41,7 +39,7 @@ class NftController {
 
   public transferNft = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      res.status(200).json(this.resultService.toSuccess(mock('../../data/TransferedSuccfully.json')));
+      res.status(200).json(mock('../../data/TransferedSuccfully.json'));
     } catch (error) {
       next(error);
     }
