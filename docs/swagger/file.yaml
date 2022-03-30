@@ -16,7 +16,7 @@ paths:
           description: content type of the to be uploaded file
           required: true
           type: string
-          x-example: 'application/json; charset=utf-8'
+          x-example: 'image/jpeg'
       responses:
         200:
           description: The presigned url response!
@@ -64,7 +64,7 @@ definitions:
       url:
         type: string
         description: the destination of the uploaded file
-        
+
   UploadedFile:
     type: object
     properties:
