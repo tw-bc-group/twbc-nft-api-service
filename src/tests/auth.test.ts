@@ -52,11 +52,7 @@ describe('Testing Auth', () => {
 
       (Sequelize as any).authenticate = jest.fn();
       const app = new App([authRoute]);
-      return request(app.getServer())
-        .post(`${authRoute.path}login`)
-        .send(userData)
-        .expect('Set-Cookie', /^Authorization=.+/)
-        .expect(200);
+      return request(app.getServer()).post(`${authRoute.path}login`).send(userData).expect(200);
     });
   });
 
