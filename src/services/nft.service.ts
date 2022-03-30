@@ -1,7 +1,7 @@
 import { Nft } from '@interfaces/nft.interface';
 import { HttpException } from '@exceptions/HttpException';
 import { generateDenomId, generateNftId, newBaseTx, newNftClient } from '@clients/nft';
-import { TxType, Client, BroadcastMode } from '@irita/irita-sdk';
+import { TxType, Client } from '@irita/irita-sdk';
 import * as TJS from 'typescript-json-schema';
 import { resolve } from 'path';
 

@@ -16,8 +16,8 @@
     "deploy:dev": "pm2 start ecosystem.config.js --only dev"
   },
   "dependencies": {
-    "aws-sdk": "^2.1103.0",
     "@irita/irita-sdk": "github:tw-bc-group/irita-sdk-js",
+    "aws-sdk": "^2.1103.0",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
