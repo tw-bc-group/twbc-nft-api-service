@@ -20,7 +20,7 @@ class NftRoute implements Routes {
     this.router.post(`${this.path}`, validationMiddleware(CreateNftDto, 'body'), this.nftController.createNft);
     this.router.post(`${this.path}/transfer`, validationMiddleware(TransferNftDto, 'body'), this.nftController.transferNft);
     this.router.get(`${this.path}/transfered`, this.nftController.getTransferedNft);
-    this.router.get(`${this.path}/:id(\\d+)`, this.nftController.getNftById);
+    this.router.get(`${this.path}/:id`, this.nftController.getNftById);
     // TODO 其他接口
   }
 }
