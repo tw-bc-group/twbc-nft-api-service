@@ -24,6 +24,11 @@ export const newBaseTx = (baseTx?: Partial<BaseTx>): BaseTx => {
     from: IRITA_KEY_NAME,
     password: IRITA_KEY_PASSWORD,
     pubkeyType: PubkeyType.sm2,
+    fee: {
+      denom: 'ugas',
+      amount: '100000',
+    },
+    gas: '100000',
   };
   Object.assign(defaultBaseTx, baseTx);
   return defaultBaseTx;
@@ -35,7 +40,7 @@ export const newNftClient = (): Client => {
     node: IRITA_NODE,
     chainId: IRITA_CHAIN_ID,
     keyDAO: new KeyDAOImpl(),
-    rpcConfig: { ...headers, timeout: 20000 }
+    rpcConfig: { ...headers, timeout: 20000 },
   };
   const client = newClient(config);
   client.keys.recover(IRITA_KEY_NAME, IRITA_KEY_PASSWORD, IRITA_MNEMONIC, PubkeyType.sm2);

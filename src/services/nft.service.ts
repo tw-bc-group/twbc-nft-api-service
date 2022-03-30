@@ -12,7 +12,7 @@ class NftService {
     this.nftClient = nftClient ?? newNftClient();
   }
 
-  generateSchema() {
+  private generateSchema() {
     const settings: TJS.PartialArgs = {
       required: true,
     };
@@ -33,16 +33,15 @@ class NftService {
    * @param count number number of NFT to be minted
    * @returns Transaction hash string
    */
-  public async createNft(creatorAddress: string, creatorName: string, denomName: string, nftName: string, imageUrl: string, count: number): Promise<{hash: string}> {
-    // TODO temporarily use a higher fee and gas limit, need to work on simulate the transaction later
-    if (count > 10) throw new HttpException(400, 'too many nfts in one batch');
-    const baseTx = newBaseTx({
-      fee: {
-        denom: 'ugas',
-        amount: '500000',
-      },
-      gas: '500000',
-    });
+  public async createNft(
+    creatorAddress: string,
+    creatorName: string,
+    denomName: string,
+    nftName: string,
+    imageUrl: string,
+    count: number,
+  ): Promise<{ hash: string }> {
+    const baseTx = newBaseTx();
     const sender = this.nftClient.keys.show(baseTx.from);
     const denomId = generateDenomId();
     const schema = this.generateSchema();
@@ -73,7 +72,7 @@ class NftService {
           name: creatorName,
         },
         createdAt: nowInMilliseconds,
-        imageUrl
+        imageUrl,
       };
       return {
         type: TxType.MsgMintNFT,
@@ -88,8 +87,18 @@ class NftService {
         },
       };
     });
-
-    return await this.nftClient.tx.buildAndSend([issueDenomMsg, ...mintNftMsgs], baseTx);
+    const msgs = [issueDenomMsg, ...mintNftMsgs];
+    const simulation = await this.nftClient.tx.simulate(msgs, baseTx);
+    // Fee multiplier 1.2 recommended by bianjie staff
+    const amount = Math.floor(simulation.gasInfo.gasUsed * 1.2).toString();
+    const realTx = newBaseTx({
+      fee: {
+        denom: 'ugas',
+        amount,
+      },
+      gas: amount,
+    });
+    return await this.nftClient.tx.buildAndSend(msgs, realTx);
   }
 
   /**
@@ -100,13 +109,16 @@ class NftService {
     if (!owner) throw new HttpException(409, 'no nft found');
     const ownerResponse: any = await this.nftClient.nft.queryOwner(owner);
     const idCollectionsList: { denomId: string; tokenIdsList: string[] }[] = ownerResponse.owner.idCollectionsList;
-    const filteredIdCollectionsList = idCollectionsList.filter(item => item.denomId.startsWith('thoughtworks'));
-    const ownedDenomIds = filteredIdCollectionsList.map(({ denomId }) => denomId);
-    const ownedTokenIds = filteredIdCollectionsList.map(({ tokenIdsList }) => tokenIdsList).flat();
+    const ownedNftDenomIds = idCollectionsList.map(({ denomId }) => denomId);
+    const ownedNftIds = idCollectionsList.map(({ tokenIdsList }) => tokenIdsList).flat();
 
-    const collectionResponses = await Promise.all(ownedDenomIds.map(denomId => this.nftClient.nft.queryCollection(denomId)));
-    const nfts = collectionResponses.map((item: any) => item.collection.nftsList).flat();
-    const ownedNfts = nfts.filter(item => ownedTokenIds.includes(item.id));
+    const collectionResponses = await Promise.all(ownedNftDenomIds.map(denomId => this.nftClient.nft.queryCollection(denomId)));
+    const adminAddress = this.nftClient.keys.show(newBaseTx().from);
+    const nfts = collectionResponses
+      .filter((item: any) => item.collection.denom.creator === adminAddress)
+      .map((item: any) => item.collection.nftsList)
+      .flat();
+    const ownedNfts = nfts.filter(item => ownedNftIds.includes(item.id));
     return ownedNfts.map(nft => JSON.parse(nft.data));
   }
 
