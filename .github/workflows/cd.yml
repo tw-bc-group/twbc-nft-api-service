@@ -24,11 +24,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-            # - name: Deploy to AWS CloudFormation
-            #   uses: aws-actions/aws-cloudformation-github-deploy@v1
-            #   with:
-            #     name: twbc-nft-images-s3-bucket-deployment
-            #     template: ./cloudformation/image-bucket.yml
+      - name: Deploy to AWS CloudFormation
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: twbc-nft-images-s3-bucket-deployment
+          template: ./cloudformation/image-bucket.yml
+          no-fail-on-empty-changeset: '1'
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
