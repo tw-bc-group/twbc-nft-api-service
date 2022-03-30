@@ -4,6 +4,30 @@ tags:
 
 paths:
 
+  # [GET] presignedUrl
+  '/file/presigned-url':
+    get:
+      tags:
+        - file
+      summary: get presigned url for file upload
+      parameters:
+        - name: contentType
+          in: query
+          description: content type of the to be uploaded file
+          required: true
+          type: string
+          x-example: 'application/json; charset=utf-8'
+      responses:
+        200:
+          description: The presigned url response!
+          schema:
+            $ref: '#/definitions/PresignedUrlResponse'
+        400:
+          description: 'Bad Request'
+        500:
+          description: 'Server Error'
+
+
   # [POST] nft
   '/file/upload':
     post:
@@ -28,6 +52,19 @@ paths:
 
 # definitions
 definitions:
+  PresignedUrlResponse:
+    type: object
+    properties:
+      fileKey:
+        type: string
+        description: file key of the to be uploaded file
+      uploadUrl:
+        type: string
+        description: the upload url for the file
+      url:
+        type: string
+        description: the destination of the uploaded file
+        
   UploadedFile:
     type: object
     properties:
