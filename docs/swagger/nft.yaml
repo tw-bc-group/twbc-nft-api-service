@@ -138,12 +138,15 @@ definitions:
       count:
         type: integer
         description: counts of nft
+      denomName:
+        type: string
+        description: name of the denom
       name:
         type: string
-        description: name of a nft
+        description: name of the nft
       imageUrl:
         type: string
-        description: nft id
+        description: image url of the nft
   NftDetail:
     type: object
     properties:
@@ -222,7 +225,7 @@ definitions:
                   description: the time of when the nft is updated
                 count:
                   type: integer
-                  description: counts of total nft in the same denom 
+                  description: counts of total nft in the same denom
   TranserNft:
     type: object
     properties:

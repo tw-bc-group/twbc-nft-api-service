@@ -25,14 +25,15 @@ class NftService {
 
   /**
    * create NFT
-   * @param minter string minter address
+   * @param creatorAddress string creator address
+   * @param creatorName string creator name
    * @param denomName string denom name
-   * @param name string nft name
+   * @param nftName string nft name
    * @param imageUrl string nft image url
    * @param count number number of NFT to be minted
    * @returns Transaction hash string
    */
-  public async createNft(minter: string, denomName: string, name: string, imageUrl: string, count: number): Promise<string> {
+  public async createNft(creatorAddress: string, creatorName: string, denomName: string, nftName: string, imageUrl: string, count: number): Promise<{hash: string}> {
     // TODO temporarily use a higher fee and gas limit, need to work on simulate the transaction later
     if (count > 10) throw new HttpException(400, 'too many nfts in one batch');
     const baseTx = newBaseTx({
@@ -41,7 +42,6 @@ class NftService {
         amount: '500000',
       },
       gas: '500000',
-      mode: BroadcastMode.Sync,
     });
     const sender = this.nftClient.keys.show(baseTx.from);
     const denomId = generateDenomId();
@@ -60,29 +60,36 @@ class NftService {
     const mintNftMsgs = Array.from(Array(count)).map((_, i) => {
       const nftId = generateNftId(i + 1);
       const nft: Nft = {
-        id: nftId,
-        denomId,
-        name,
-        minter,
-        mintedAt: nowInMilliseconds,
+        nft: {
+          id: nftId,
+          name: nftName,
+        },
+        denom: {
+          id: denomId,
+          name: denomName,
+        },
+        creator: {
+          wallet: creatorAddress,
+          name: creatorName,
+        },
+        createdAt: nowInMilliseconds,
+        imageUrl
       };
       return {
         type: TxType.MsgMintNFT,
         value: {
           id: nftId,
           denom_id: denomId,
-          name,
+          name: nftName,
           uri: imageUrl,
           data: JSON.stringify(nft),
           sender,
-          recipient: minter,
+          recipient: creatorAddress,
         },
       };
     });
 
-    const txResult = await this.nftClient.tx.buildAndSend([issueDenomMsg, ...mintNftMsgs], baseTx);
-    console.log(denomId);
-    return txResult.hash;
+    return await this.nftClient.tx.buildAndSend([issueDenomMsg, ...mintNftMsgs], baseTx);
   }
 
   /**
