@@ -41,7 +41,7 @@ class NftService {
     const creatorAddress = 'iaa1jr0zwjhrk4y0jg79l08nlzq2q2awzjuafdgqez';
     const creatorName = 'AW';
     const baseTx = newBaseTx();
-    const sender = this.nftClient.keys.show(baseTx.from);
+    const sender = await this.nftClient.keys.show(baseTx.from);
     const denomId = generateDenomId();
     const schema = this.generateSchema();
     const issueDenomMsg = {
@@ -112,7 +112,7 @@ class NftService {
     const ownedNftIds = idCollectionsList.map(({ tokenIdsList }) => tokenIdsList).flat();
 
     const collectionResponses = await Promise.all(ownedNftDenomIds.map(denomId => this.nftClient.nft.queryCollection(denomId)));
-    const adminAddress = this.nftClient.keys.show(newBaseTx().from);
+    const adminAddress = await this.nftClient.keys.show(newBaseTx().from);
     const nfts = collectionResponses
       .filter((item: any) => item.collection.denom.creator === adminAddress)
       .map((item: any) => item.collection.nftsList)

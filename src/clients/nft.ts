@@ -8,13 +8,13 @@ class KeyDAOImpl implements KeyDAO {
   constructor() {
     this.map = {};
   }
-  write(name: string, key: Key): void {
+  async write(name: string, key: Key): Promise<void> {
     this.map[name] = key;
   }
-  read(name: string): Key {
+  async read(name: string): Promise<Key> {
     return this.map[name];
   }
-  delete(name: string): void {
+  async delete(name: string): Promise<void> {
     delete this.map[name];
   }
 }
