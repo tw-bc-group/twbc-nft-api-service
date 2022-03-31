@@ -3,7 +3,7 @@ import mime from "mime-types";
 import S3 from "aws-sdk/clients/s3";
 import { PresignedUrl } from '@/interfaces/file.interface';
 
-const URL_EXPIRATION_SECONDS = 3600;
+const URL_EXPIRATION_SECONDS = 300;
 const BUCKET_NAME = 'twbc-nft-images';
 const DOMAIN_NAME = 'twbc-nft-images.s3.cn-northwest-1.amazonaws.com.cn';
 const REGION = 'cn-northwest-1';
