@@ -16,7 +16,7 @@ describe('Testing File', () => {
         });
         it('should_return_presigned_url_response_using_spy', () => {
             const testingData = {
-                fileKey: 'fileKey',
+                fileName: 'fileName',
                 uploadUrl: 'https://presigned.test.com/fileKey',
                 url: 'https://result.test.com/fileKey'
             };

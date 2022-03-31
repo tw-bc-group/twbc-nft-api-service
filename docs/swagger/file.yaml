@@ -55,9 +55,9 @@ definitions:
   PresignedUrlResponse:
     type: object
     properties:
-      fileKey:
+      fileName:
         type: string
-        description: file key of the to be uploaded file
+        description: file Name of the to be uploaded file
       uploadUrl:
         type: string
         description: the upload url for the file

@@ -1,5 +1,5 @@
 export interface PresignedUrl {
-    fileKey: string;
+    fileName: string;
     uploadUrl: string;
     url: string;
 }

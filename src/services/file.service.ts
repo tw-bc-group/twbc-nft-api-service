@@ -23,7 +23,7 @@ class FileService {
     });
     const url = `https://${DOMAIN_NAME}/${fileKey}`;
     return {
-      fileKey,
+      fileName: fileKey,
       uploadUrl,
       url,
     };
