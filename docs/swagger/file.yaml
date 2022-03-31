@@ -16,7 +16,7 @@ paths:
           description: content type of the to be uploaded file
           required: true
           type: string
-          x-example: 'image/jpeg'
+          x-example: 'image/png'
       responses:
         200:
           description: The presigned url response!
