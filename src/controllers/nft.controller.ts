@@ -7,9 +7,7 @@ class NftController {
 
   public getNfts = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      //TODO get user address, paging
-      const address = "iaa1jr0zwjhrk4y0jg79l08nlzq2q2awzjuafdgqez";
-      const nfts = await this.nftService.queryOwner(address);
+      const nfts = await this.nftService.list();
       res.status(200).json(nfts);
     } catch (error) {
       next(error);
@@ -26,7 +24,8 @@ class NftController {
 
   public getNftById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      res.status(200).json(mock('../../data/NftDetail.json'));
+      const nft = await this.nftService.findNftById(req.params.denomId, req.params.id)
+      res.status(200).json(nft);
     } catch (error) {
       next(error);
     }
@@ -34,13 +33,11 @@ class NftController {
 
   public createNft = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const creatorAddress = 'iaa1jr0zwjhrk4y0jg79l08nlzq2q2awzjuafdgqez';
-      const creatorName = 'AW';
       const denomName = req.body.denomName?.toString();
       const nftName = req.body.name?.toString();
       const imageUrl = req.body.imageUrl?.toString();
       const count = parseInt(req.body.count);
-      const response = await this.nftService.createNft(creatorAddress, creatorName, denomName, nftName, imageUrl, count);
+      const response = await this.nftService.createNft( denomName, nftName, imageUrl, count);
       res.status(200).json(response);
     } catch (error) {
       next(error);

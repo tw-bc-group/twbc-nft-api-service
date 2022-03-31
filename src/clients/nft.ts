@@ -20,15 +20,16 @@ class KeyDAOImpl implements KeyDAO {
 }
 
 export const newBaseTx = (baseTx?: Partial<BaseTx>): BaseTx => {
+  const amount = NODE_ENV === 'production' ? '100000' : '200000';
   const defaultBaseTx: BaseTx = {
     from: IRITA_KEY_NAME,
     password: IRITA_KEY_PASSWORD,
     pubkeyType: PubkeyType.sm2,
     fee: {
       denom: 'ugas',
-      amount: '100000',
+      amount,
     },
-    gas: '100000',
+    gas: amount,
   };
   Object.assign(defaultBaseTx, baseTx);
   return defaultBaseTx;

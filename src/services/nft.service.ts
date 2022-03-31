@@ -25,8 +25,6 @@ class NftService {
 
   /**
    * create NFT
-   * @param creatorAddress string creator address
-   * @param creatorName string creator name
    * @param denomName string denom name
    * @param nftName string nft name
    * @param imageUrl string nft image url
@@ -34,13 +32,14 @@ class NftService {
    * @returns Transaction hash string
    */
   public async createNft(
-    creatorAddress: string,
-    creatorName: string,
     denomName: string,
     nftName: string,
     imageUrl: string,
     count: number,
   ): Promise<{ hash: string }> {
+    // TODO find current user info from DB
+    const creatorAddress = 'iaa1jr0zwjhrk4y0jg79l08nlzq2q2awzjuafdgqez';
+    const creatorName = 'AW';
     const baseTx = newBaseTx();
     const sender = this.nftClient.keys.show(baseTx.from);
     const denomId = generateDenomId();
@@ -102,12 +101,12 @@ class NftService {
   }
 
   /**
-   * Owner queries the NFTs of the specified owner
-   * @param owner
+   * List the NFTs owned by the current user
    */
-  public async queryOwner(owner: string): Promise<Nft[]> {
-    if (!owner) throw new HttpException(409, 'no nft found');
-    const ownerResponse: any = await this.nftClient.nft.queryOwner(owner);
+  public async list(): Promise<Nft[]> {
+    // TODO find current user address from DB
+    const user = "iaa1jr0zwjhrk4y0jg79l08nlzq2q2awzjuafdgqez";
+    const ownerResponse: any = await this.nftClient.nft.queryOwner(user);
     const idCollectionsList: { denomId: string; tokenIdsList: string[] }[] = ownerResponse.owner.idCollectionsList;
     const ownedNftDenomIds = idCollectionsList.map(({ denomId }) => denomId);
     const ownedNftIds = idCollectionsList.map(({ tokenIdsList }) => tokenIdsList).flat();
@@ -122,9 +121,9 @@ class NftService {
     return ownedNfts.map(nft => JSON.parse(nft.data));
   }
 
-  public async findNftById(denomId: string, tokenId: string): Promise<Nft> {
-    if (!denomId || !tokenId) throw new HttpException(409, 'no nft found');
-    const response: any = await this.nftClient.nft.queryNFT(denomId, tokenId);
+  public async findNftById(denomId: string, nftId: string): Promise<Nft> {
+    if (!denomId || !nftId) throw new HttpException(409, 'no nft found');
+    const response: any = await this.nftClient.nft.queryNFT(denomId, nftId);
     return JSON.parse(response.nft.data);
   }
 }

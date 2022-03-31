@@ -107,18 +107,23 @@ paths:
         500:
           description: some services were broken
 
-  /nft/{id}:
-    # [GET] nft/id
+  /nft/{denomId}/{id}:
+    # [GET] nft/denomId/id
     get:
       tags:
         - nft
       summary: get details of a nft
       parameters:
+        - name: denomId
+          in: path
+          description: denom id
+          required: true
+          type: string
         - name: id
           in: path
-          description: nft db Id
+          description: nft id
           required: true
-          type: integer
+          type: string
       responses:
         200:
           description: details of a specified nft
