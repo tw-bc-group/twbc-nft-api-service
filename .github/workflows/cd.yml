@@ -62,7 +62,7 @@ jobs:
           DB_DATABASE: ${{ secrets.DB_DATABASE_DEV }}
         run: |
           envsubst < .env.template > .env
-          kubectl -n $(KUBE_NAMESPACE) create secret $SECRET_NAME --from-file .env -o yaml --dry-run | kubectl apply -f -
+          kubectl -n $KUBE_NAMESPACE create secret generic $SECRET_NAME --from-env-file .env -o yaml --dry-run=client | kubectl apply -f -
 
       - name: deploy to cluster
         env:
