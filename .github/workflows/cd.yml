@@ -59,6 +59,12 @@ jobs:
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_DATABASE: ${{ secrets.DB_DATABASE_DEV }}
+          JWT_SECRETKEY: ${{ secrets.JWT_SECRETKEY_DEV }}
+          IRITA_NODE: ${{ secrets.IRITA_TESTNET_NODE }}
+          IRITA_CHAIN_ID: ${{ secrets.IRITA_TESTNET_CHAIN_ID }}
+          IRITA_KEY_NAME: ${{ secrets.IRITA_TESTNET_KEY_NAME }}
+          IRITA_KEY_PASSWORD: ${{ secrets.IRITA_TESTNET_KEY_PASSWORD }}
+          IRITA_MNEMONIC: ${{ secrets.IRITA_TESTNET_MNEMONIC }}
         run: |
           envsubst < .env.template > .env
           kubectl -n $KUBE_NAMESPACE create secret generic $RELEASE_NAME-secrets --from-env-file .env -o yaml --dry-run=client | kubectl apply -f -
