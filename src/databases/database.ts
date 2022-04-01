@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize';
 import { db } from '@config';
 import fs from 'fs';
-import path from 'path'
+import path from 'path';
 
 const sequelize = new Sequelize(db.database, db.username, db.password, {
   dialect: 'postgres',

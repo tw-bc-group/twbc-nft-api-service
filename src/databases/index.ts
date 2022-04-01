@@ -4,8 +4,8 @@ import sequelize from './database'
 import WalletModel from '@models/wallets.model';
 
 const DB = {
-  Users: UserModel(sequelize),
   Wallets: WalletModel(sequelize),
+  Users: UserModel,
   sequelize, // connection instance (RAW queries)
   Sequelize, // library
 };

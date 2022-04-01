@@ -17,7 +17,7 @@ const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFun
       // const verificationResponse = verify(Authorization, SECRET_KEY) as DataStoredInToken;
       // const userId = verificationResponse.id;
       const userId = Authorization;
-      const findUser = await DB.Users.findByPk(userId);
+      const findUser = await DB.Users.findByPk(userId)
 
       if (findUser) {
         req.user = findUser;
@@ -31,7 +31,7 @@ const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFun
     }
   } catch (error) {
     // next(new HttpException(401, 'Wrong authentication token'));
-    next();
+    next(new HttpException(500, "service error: "+ error));
   }
 };
 
