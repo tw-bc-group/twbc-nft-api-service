@@ -110,6 +110,10 @@ You could also give specific instructions to how they can setup their developmen
 
 Ideally, you should keep the README simple. If you need to add more complex explanations, use a wiki. Check out [this wiki](https://github.com/navendu-pottekkat/nsfw-filter/wiki) for inspiration. -->
 
+# Blockchain
+
+Testnet browser: `http://58.33.6.114:28000/#/nft/token?denom=thoughtworks4f49da367c314a0695954cc97d9bdaff&tokenId=nft73e23738578e4fe2b7db73748b5f3c800000000002`
+
 # Contribute
 [(Back to top)](#table-of-contents)
 
