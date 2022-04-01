@@ -17,7 +17,7 @@ describe('NFT queries', () => {
   }, 5000);
 
   it('queryOwner', async () => {
-    const key = client.keys.show(IRITA_KEY_NAME);
+    const key = await client.keys.show(IRITA_KEY_NAME);
     const response = await client.nft.queryOwner(key);
     expect(response).toHaveProperty('owner');
   }, 5000);
