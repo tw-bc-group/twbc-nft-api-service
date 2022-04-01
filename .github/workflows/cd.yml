@@ -50,6 +50,20 @@ jobs:
         run: |
           kubectl get namespaces $KUBE_NAMESPACE || kubectl create namespace $KUBE_NAMESPACE
 
+      - name: Create or Update k8s secrets configurations
+        env:
+          SECRET_NAME: $RELEASE_NAME-secrets
+          APP_PORT: 3000
+          APP_ENV: dev
+          DB_HOST: ${{ secrets.DB_URL }}
+          DB_PORT: 5432
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE_DEV }}
+        run: |
+          envsubst < .env.template > .env
+          kubectl -n $(KUBE_NAMESPACE) create secret $SECRET_NAME --from-file .env -o yaml --dry-run | kubectl apply -f -
+
       - name: deploy to cluster
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
