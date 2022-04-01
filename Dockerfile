@@ -12,4 +12,6 @@ ENV NODE_ENV development
 
 EXPOSE 3000
 
+RUN npx prisma generate
+
 CMD ["npm", "run", "dev"]
