@@ -1,14 +1,13 @@
-import { newNftClient, generateDenomId, generateNftId } from '@clients/nft';
-import { IRITA_KEY_NAME } from '@config';
+import { client, generateDenomId, generateNftId, getAdminAddress } from '@clients/nft';
 import { v4 as uuid } from 'uuid';
 
-const client = newNftClient();
-describe('Client configuration', () => {
-  it('Key should be recovered in memory', async () => {
-    const key = await client.keys.show(IRITA_KEY_NAME);
-    expect(typeof key).toEqual('string');
-  });
-});
+// describe('Keystore queries', () => {
+  // it('Should be able to get admin address', async () => {
+    // TODO should fake DB to get key
+    // const key = await getAdminAddress();
+    // expect(typeof key).toEqual('string');
+  // });
+// });
 
 describe('NFT queries', () => {
   it('queryDenoms', async () => {
@@ -17,7 +16,7 @@ describe('NFT queries', () => {
   }, 5000);
 
   it('queryOwner', async () => {
-    const key = await client.keys.show(IRITA_KEY_NAME);
+    const key = 'iaa1uhajlcjxtkzq7g6uey4hqvukru9n2t4nfxe3pr'
     const response = await client.nft.queryOwner(key);
     expect(response).toHaveProperty('owner');
   }, 5000);

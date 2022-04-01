@@ -1,15 +1,15 @@
 import { Nft } from '@interfaces/nft.interface';
 import { HttpException } from '@exceptions/HttpException';
-import { generateDenomId, generateNftId, newBaseTx, newNftClient } from '@clients/nft';
+import { generateDenomId, generateNftId, newBaseTx, client, getAdminAddress } from '@clients/nft';
 import { TxType, Client } from '@irita/irita-sdk';
 import * as TJS from 'typescript-json-schema';
 import { resolve } from 'path';
 
 class NftService {
-  public nftClient: Client;
+  nftClient: Client;
 
   constructor(nftClient?: Client) {
-    this.nftClient = nftClient ?? newNftClient();
+    this.nftClient = nftClient ?? client;
   }
 
   private generateSchema() {
@@ -25,6 +25,8 @@ class NftService {
 
   /**
    * create NFT
+   * @param userId number userId
+   * @param userName string userName
    * @param denomName string denom name
    * @param nftName string nft name
    * @param imageUrl string nft image url
@@ -32,16 +34,18 @@ class NftService {
    * @returns Transaction hash string
    */
   public async createNft(
+    userId: number,
+    userName: string,
     denomName: string,
     nftName: string,
     imageUrl: string,
     count: number,
   ): Promise<{ hash: string }> {
     // TODO find current user info from DB
-    const creatorAddress = 'iaa1jr0zwjhrk4y0jg79l08nlzq2q2awzjuafdgqez';
-    const creatorName = 'AW';
+    const creatorAddress = await this.nftClient.keys.show(userId.toString());
+    const creatorName = userName;
     const baseTx = newBaseTx();
-    const sender = await this.nftClient.keys.show(baseTx.from);
+    const sender = await getAdminAddress();
     const denomId = generateDenomId();
     const schema = this.generateSchema();
     const issueDenomMsg = {
@@ -51,6 +55,8 @@ class NftService {
         name: denomName,
         schema,
         sender,
+        updateRestricted: true,
+        mintRestricted: true,
       },
     };
 
@@ -102,17 +108,19 @@ class NftService {
 
   /**
    * List the NFTs owned by the current user
+   * @param userId number userId
+   * @returns an array of NFT
    */
-  public async list(): Promise<Nft[]> {
-    // TODO find current user address from DB
-    const user = "iaa1jr0zwjhrk4y0jg79l08nlzq2q2awzjuafdgqez";
+  public async list(userId: number): Promise<Nft[]> {
+    const user = await this.nftClient.keys.show(userId.toString());
     const ownerResponse: any = await this.nftClient.nft.queryOwner(user);
     const idCollectionsList: { denomId: string; tokenIdsList: string[] }[] = ownerResponse.owner.idCollectionsList;
     const ownedNftDenomIds = idCollectionsList.map(({ denomId }) => denomId);
     const ownedNftIds = idCollectionsList.map(({ tokenIdsList }) => tokenIdsList).flat();
 
     const collectionResponses = await Promise.all(ownedNftDenomIds.map(denomId => this.nftClient.nft.queryCollection(denomId)));
-    const adminAddress = await this.nftClient.keys.show(newBaseTx().from);
+    const adminAddress = await getAdminAddress();
+
     const nfts = collectionResponses
       .filter((item: any) => item.collection.denom.creator === adminAddress)
       .map((item: any) => item.collection.nftsList)

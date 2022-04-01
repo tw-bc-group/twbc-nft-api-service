@@ -4,9 +4,19 @@ import { CreateUserDto } from '@dtos/users.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { User } from '@interfaces/users.interface';
 import { isEmpty } from '@utils/util';
+import { Client } from '@irita/irita-sdk';
+import { client } from '@clients/nft';
+import config from '@config';
 
 class UserService {
   public users = DB.Users;
+  public wallets = DB.Wallets;
+
+  nftClient: Client;
+
+  constructor(nftClient?: Client) {
+    this.nftClient = nftClient ?? client;
+  }
 
   public async findAllUser(): Promise<User[]> {
     const allUser: User[] = await this.users.findAll();
@@ -30,6 +40,8 @@ class UserService {
 
     const hashedPassword = await hash(userData.password, 10);
     const createUserData: User = await this.users.create({ ...userData, password: hashedPassword });
+    const userId = createUserData.id;
+    await client.keys.add(userId.toString(), config.irita.keystorePassword);
     return createUserData;
   }
 

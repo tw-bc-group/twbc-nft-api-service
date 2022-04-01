@@ -1,12 +1,6 @@
 import { IsString, IsEmail, IsInt } from 'class-validator';
 
 export class CreateNftDto {
-  @IsEmail()
-  public email: string;
-
-  @IsString()
-  public password: string;
-
   @IsString()
   public denomName: string;
 

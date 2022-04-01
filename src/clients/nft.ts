@@ -1,29 +1,17 @@
-import { Key, KeyDAO, BaseTx, PubkeyType, newClient, Tx, Client } from '@irita/irita-sdk';
-import { IRITA_API_KEY, IRITA_NODE, IRITA_CHAIN_ID, IRITA_KEY_NAME, IRITA_KEY_PASSWORD, IRITA_MNEMONIC, NODE_ENV } from '@config';
+import config from '@config';
+import { Key, KeyDAO, BaseTx, PubkeyType, newClient, Tx, Client, SdkError } from '@irita/irita-sdk';
 import { v4 as uuid } from 'uuid';
+import DB from '@databases';
 
-class KeyDAOImpl implements KeyDAO {
-  private map: { [key: string]: Key };
+export const generateDenomId = (): string => `thoughtworks${uuid().replace(/-/g, '')}`;
 
-  constructor() {
-    this.map = {};
-  }
-  async write(name: string, key: Key): Promise<void> {
-    this.map[name] = key;
-  }
-  async read(name: string): Promise<Key> {
-    return this.map[name];
-  }
-  async delete(name: string): Promise<void> {
-    delete this.map[name];
-  }
-}
+export const generateNftId = (count: number): string => `nft${uuid().replace(/-/g, '')}${count.toString().padStart(10, '0')}`;
 
 export const newBaseTx = (baseTx?: Partial<BaseTx>): BaseTx => {
-  const amount = NODE_ENV === 'production' ? '100000' : '200000';
+  const amount = config.nodeEnv === 'production' ? '100000' : '200000';
   const defaultBaseTx: BaseTx = {
-    from: IRITA_KEY_NAME,
-    password: IRITA_KEY_PASSWORD,
+    from: config.irita.adminKeyName,
+    password: config.irita.keystorePassword,
     pubkeyType: PubkeyType.sm2,
     fee: {
       denom: 'ugas',
@@ -35,19 +23,48 @@ export const newBaseTx = (baseTx?: Partial<BaseTx>): BaseTx => {
   return defaultBaseTx;
 };
 
-export const newNftClient = (): Client => {
-  const headers = IRITA_API_KEY && { headers: { 'x-api-key': IRITA_API_KEY } };
-  const config = {
-    node: IRITA_NODE,
-    chainId: IRITA_CHAIN_ID,
-    keyDAO: new KeyDAOImpl(),
-    rpcConfig: { ...headers, timeout: 20000 },
-  };
-  const client = newClient(config);
-  client.keys.recover(IRITA_KEY_NAME, IRITA_KEY_PASSWORD, IRITA_MNEMONIC, PubkeyType.sm2);
-  return client;
-};
+class IritaKeyDAO implements KeyDAO {
+  private wallets = DB.Wallets;
 
-export const generateDenomId = (): string => `thoughtworks${uuid().replace(/-/g, '')}`;
+  async write(name: string, key: Key): Promise<void> {
+    await this.wallets.create({
+      keyName: name,
+      ...key,
+    });
+  }
+  async read(name: string): Promise<Key> {
+    return await this.wallets.findOne({
+      where: {
+        keyName: name,
+      }
+    });
+  }
+  async delete(name: string): Promise<void> {
+    const wallet = await this.wallets.findOne({
+      where: {
+        keyName: name,
+      }
+    });
+    await wallet.destroy();
+  }
+}
 
-export const generateNftId = (count: number): string => `nft${uuid().replace(/-/g, '')}${count.toString().padStart(10, '0')}`;
+// Instantiate client
+const headers = config.irita.apiKey && { headers: { 'x-api-key': config.irita.apiKey } };
+export const client = newClient( {
+  node: config.irita.node,
+  chainId: config.irita.chainId,
+  keyDAO: new IritaKeyDAO(),
+  rpcConfig: { ...headers, timeout: 20000 },
+});
+
+export const getAdminAddress = async (): Promise<string> => {
+  try {
+    return await client.keys.show(config.irita.adminKeyName);
+  } catch (e: unknown) {
+    // Recover admin key
+    if (e instanceof SdkError) {
+      return await client.keys.recover(config.irita.adminKeyName, config.irita.keystorePassword, config.irita.adminKeyMnemonic, PubkeyType.sm2);
+    }
+  }
+}

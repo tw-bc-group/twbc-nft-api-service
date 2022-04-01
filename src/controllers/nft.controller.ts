@@ -1,13 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 import NftService from '@services/nft.service';
 import { mock } from '@utils/mock';
+import { RequestWithUser } from '@interfaces/auth.interface';
+
 
 class NftController {
   public nftService = new NftService();
 
-  public getNfts = async (req: Request, res: Response, next: NextFunction) => {
+  public getNfts = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
-      const nfts = await this.nftService.list();
+      const nfts = await this.nftService.list(req.user.id);
       res.status(200).json(nfts);
     } catch (error) {
       next(error);
@@ -31,13 +33,15 @@ class NftController {
     }
   };
 
-  public createNft = async (req: Request, res: Response, next: NextFunction) => {
+  public createNft = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
       const denomName = req.body.denomName?.toString();
       const nftName = req.body.name?.toString();
       const imageUrl = req.body.imageUrl?.toString();
       const count = parseInt(req.body.count);
-      const response = await this.nftService.createNft( denomName, nftName, imageUrl, count);
+      const userId = req.user.id;
+      const userName = req.user.email;
+      const response = await this.nftService.createNft(userId, userName, denomName, nftName, imageUrl, count);
       res.status(200).json(response);
     } catch (error) {
       next(error);

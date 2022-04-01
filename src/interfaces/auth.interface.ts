@@ -1,5 +1,6 @@
 import { Request } from 'express';
 import { User } from '@interfaces/users.interface';
+import { Wallet } from '@interfaces/wallets.interface';
 
 export interface DataStoredInToken {
   id: number;
@@ -13,4 +14,5 @@ export interface TokenData {
 
 export interface RequestWithUser extends Request {
   user: User;
+  wallet: Wallet;
 }
