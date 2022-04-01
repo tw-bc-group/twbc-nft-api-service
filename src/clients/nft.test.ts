@@ -4,8 +4,8 @@ import { v4 as uuid } from 'uuid';
 
 const client = newNftClient();
 describe('Client configuration', () => {
-  it('Key should be recovered in memory', () => {
-    const key = client.keys.show(IRITA_KEY_NAME);
+  it('Key should be recovered in memory', async () => {
+    const key = await client.keys.show(IRITA_KEY_NAME);
     expect(typeof key).toEqual('string');
   });
 });
@@ -53,4 +53,4 @@ describe('id generators', () => {
     const nftId = generateNftId(1);
     expect(nftId.match(regExp)).toHaveLength(1);
   });
-})
+});
