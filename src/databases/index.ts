@@ -1,13 +1,5 @@
-import Sequelize from 'sequelize';
-import UserModel from '@models/users.model';
-import sequelize from './database'
-import WalletModel from '@models/wallets.model';
+import { PrismaClient } from '@prisma/client';
 
-const DB = {
-  Wallets: WalletModel(sequelize),
-  Users: UserModel,
-  sequelize, // connection instance (RAW queries)
-  Sequelize, // library
-};
+const prisma = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] });
 
-export default DB;
+export default prisma;

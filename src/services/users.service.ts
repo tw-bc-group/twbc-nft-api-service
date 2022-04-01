@@ -9,8 +9,8 @@ import { client } from '@clients/nft';
 import config from '@config';
 
 class UserService {
-  public users = DB.Users;
-  public wallets = DB.Wallets;
+  public users = DB.users;
+  public wallets = DB.wallets;
 
   nftClient: Client;
 
@@ -19,14 +19,14 @@ class UserService {
   }
 
   public async findAllUser(): Promise<User[]> {
-    const allUser: User[] = await this.users.findAll();
+    const allUser: User[] = await this.users.findMany();
     return allUser;
   }
 
   public async findUserById(userId: number): Promise<User> {
     if (isEmpty(userId)) throw new HttpException(400, "You're not userId");
 
-    const findUser: User = await this.users.findByPk(userId);
+    const findUser: User = await this.users.findUnique({ where: { id: userId } });
     if (!findUser) throw new HttpException(409, "You're not user");
 
     return findUser;
@@ -35,11 +35,11 @@ class UserService {
   public async createUser(userData: CreateUserDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
-    const findUser: User = await this.users.findOne({ where: { email: userData.email } });
+    const findUser: User = await this.users.findFirst({ where: { email: userData.email } });
     if (findUser) throw new HttpException(409, `You're email ${userData.email} already exists`);
 
     const hashedPassword = await hash(userData.password, 10);
-    const createUserData: User = await this.users.create({ ...userData, password: hashedPassword });
+    const createUserData: User = await this.users.create({ data: { email: userData.email, password: hashedPassword } });
     const userId = createUserData.id;
     await client.keys.add(userId.toString(), config.irita.keystorePassword);
     return createUserData;
@@ -48,23 +48,23 @@ class UserService {
   public async updateUser(userId: number, userData: CreateUserDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
-    const findUser: User = await this.users.findByPk(userId);
+    const findUser: User = await this.users.findUnique({ where: { id: userId } });
     if (!findUser) throw new HttpException(409, "You're not user");
 
     const hashedPassword = await hash(userData.password, 10);
-    await this.users.update({ ...userData, password: hashedPassword }, { where: { id: userId } });
+    await this.users.update({ data: { ...userData, password: hashedPassword }, where: { id: userId } });
 
-    const updateUser: User = await this.users.findByPk(userId);
+    const updateUser: User = await this.users.findUnique({ where: { id: userId } });
     return updateUser;
   }
 
   public async deleteUser(userId: number): Promise<User> {
     if (isEmpty(userId)) throw new HttpException(400, "You're not userId");
 
-    const findUser: User = await this.users.findByPk(userId);
+    const findUser: User = await this.users.findUnique({ where: { id: userId } });
     if (!findUser) throw new HttpException(409, "You're not user");
 
-    await this.users.destroy({ where: { id: userId } });
+    await this.users.delete({ where: { id: userId } });
 
     return findUser;
   }

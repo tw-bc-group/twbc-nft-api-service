@@ -24,34 +24,38 @@ export const newBaseTx = (baseTx?: Partial<BaseTx>): BaseTx => {
 };
 
 class IritaKeyDAO implements KeyDAO {
-  private wallets = DB.Wallets;
+  private wallets = DB.wallets;
 
   async write(name: string, key: Key): Promise<void> {
     await this.wallets.create({
-      keyName: name,
-      ...key,
+      data: {
+        keyName: name,
+        ...key,
+      },
     });
   }
+
   async read(name: string): Promise<Key> {
-    return await this.wallets.findOne({
+    return await this.wallets.findFirst({
       where: {
         keyName: name,
-      }
+      },
     });
   }
+
   async delete(name: string): Promise<void> {
-    const wallet = await this.wallets.findOne({
+    const wallet = await this.wallets.findFirst({
       where: {
         keyName: name,
-      }
+      },
     });
-    await wallet.destroy();
+    await this.wallets.delete({ where: { id: wallet.id } });
   }
 }
 
 // Instantiate client
 const headers = config.irita.apiKey && { headers: { 'x-api-key': config.irita.apiKey } };
-export const client = newClient( {
+export const client = newClient({
   node: config.irita.node,
   chainId: config.irita.chainId,
   keyDAO: new IritaKeyDAO(),
@@ -67,4 +71,4 @@ export const getAdminAddress = async (): Promise<string> => {
       return await client.keys.recover(config.irita.adminKeyName, config.irita.keystorePassword, config.irita.adminKeyMnemonic, PubkeyType.sm2);
     }
   }
-}
+};
