@@ -25,6 +25,9 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - secretRef:
+              name:  {{ include "twbc-nft-api-service.fullname" . }}-secrets
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
