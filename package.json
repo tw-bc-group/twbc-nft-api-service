@@ -15,7 +15,8 @@
     "deploy:prod": "npm run build && pm2 start ecosystem.config.js --only prod",
     "deploy:dev": "pm2 start ecosystem.config.js --only dev",
     "db:migrate": "prisma migrate deploy",
-    "db:migrate:generate": "prisma migrate dev"
+    "db:migrate:generate": "prisma migrate dev",
+    "db:seed": "prisma db seed"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

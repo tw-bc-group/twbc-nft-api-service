@@ -9,13 +9,6 @@ export interface Config {
     env: string;
     port: string;
   };
-  db: {
-    database: string;
-    username: string;
-    port: number;
-    password: string;
-    host: string;
-  };
   logger: {
     format?: string;
     dir?: string;
@@ -38,14 +31,6 @@ export const app = {
   port: process.env.APP_PORT,
 };
 
-export const db = {
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  database: process.env.DB_DATABASE,
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-};
-
 export const jwt = {
   secretKey: process.env.JWT_SECRETKEY,
 };
@@ -66,7 +51,6 @@ const env_cfg = {
 const config: Config = {
   nodeEnv: process.env.NODE_ENV,
   app,
-  db,
   jwt,
   irita,
   ...env_cfg[app.env],
