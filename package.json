@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@irita/irita-sdk": "github:tw-bc-group/irita-sdk-js",
-    "@prisma/client": "^3.11.1",
+    "@prisma/client": "^3.12.0",
     "aws-sdk": "^2.1103.0",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.4.0",
@@ -81,7 +81,7 @@
     "nodemon": "^2.0.15",
     "pm2": "^5.1.0",
     "prettier": "^2.3.2",
-    "prisma": "^3.11.1",
+    "prisma": "^3.12.0",
     "supertest": "^6.1.3",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.1.6",
