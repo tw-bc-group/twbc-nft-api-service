@@ -7,19 +7,97 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
+model User {
   id        Int      @id @default(autoincrement())
   email     String   @db.VarChar(45)
   password  String   @db.VarChar(255)
-  createdAt DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  mintRecord MintRecord[]
+
+  @@map(name: "users")
 }
 
-model wallets {
+model Wallet {
   id        Int      @id @default(autoincrement())
   keyName   String   @unique @db.VarChar(255)
   address   String   @db.VarChar(255)
   privKey   String   @db.VarChar(255)
-  createdAt DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map(name: "wallets")
+}
+
+model Subject {
+  id          Int      @id @default(autoincrement())
+  no          String   @unique @db.VarChar(100)
+  name        String   @db.VarChar(255)
+  description String   @db.Text
+  issuer      String   @db.VarChar(50)
+  brand       String   @db.VarChar(50)
+  status      Int      @db.SmallInt
+  salesTime   DateTime @db.Timestamptz(6)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  collections Collection[]
+
+  @@index([no, salesTime])
+  @@index([salesTime])
+  @@map(name: "subjects")
+}
+
+model Collection {
+  id          Int    @id @default(autoincrement())
+  no          String @unique @db.VarChar(100)
+  name        String @db.VarChar(255)
+  description String @db.Text
+  issueTotal  Int
+  issueRemain Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  subjectId  Int      @db.Integer
+  subject    Subject  @relation(fields: [subjectId], references: [id])
+  resourceId Int      @unique @db.Integer
+  resource   Resource @relation(fields: [resourceId], references: [id])
+
+  mintRecord MintRecord?
+
+  @@index([no])
+  @@index([subjectId])
+  @@index([resourceId])
+  @@map(name: "collections")
+}
+
+model Resource {
+  id   Int    @id @default(autoincrement())
+  url  String @db.VarChar(1000)
+  hash String @db.VarChar(100)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  collection Collection?
+
+  @@index([hash])
+  @@map(name: "resources")
+}
+
+model MintRecord {
+  id       Int  @id @default(autoincrement())
+  status   Int  @db.SmallInt
+  response Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId       Int
+  user         User       @relation(fields: [userId], references: [id])
+  collectionId Int        @unique
+  collection   Collection @relation(fields: [collectionId], references: [id])
+
+  @@index([userId])
+  @@index([collectionId])
+  @@map(name: "mint_records")
 }
