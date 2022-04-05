@@ -1,6 +1,5 @@
 import { Request } from 'express';
-import { User } from '@prisma/client';
-import { Wallet } from '@interfaces/wallets.interface';
+import { User, Wallet } from '@prisma/client';
 
 export interface DataStoredInToken {
   id: number;
