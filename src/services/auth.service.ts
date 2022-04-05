@@ -3,12 +3,12 @@ import { SECRET_KEY } from '@config';
 import DB from '@databases';
 import { HttpException } from '@exceptions/HttpException';
 import { DataStoredInToken, TokenData } from '@interfaces/auth.interface';
-import { User } from '@interfaces/users.interface';
+import { User } from '@prisma/client';
 import { isEmpty } from '@utils/util';
 import bcrypt from 'bcrypt';
 
 class AuthService {
-  public users = DB.users;
+  public users = DB.user;
 
   public async login(userData: { email: string; password: string }): Promise<{ tokenData: TokenData; userInfo: { id: number; email: string } }> {
     const findUser = await this.users.findFirst({

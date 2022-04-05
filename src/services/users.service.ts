@@ -2,15 +2,15 @@ import { hash } from 'bcrypt';
 import DB from '@databases';
 import { CreateUserDto } from '@dtos/users.dto';
 import { HttpException } from '@exceptions/HttpException';
-import { User } from '@interfaces/users.interface';
+import { User } from '@prisma/client';
 import { isEmpty } from '@utils/util';
 import { Client } from '@irita/irita-sdk';
 import { client } from '@clients/nft';
 import config from '@config';
 
 class UserService {
-  public users = DB.users;
-  public wallets = DB.wallets;
+  public users = DB.user;
+  public wallets = DB.wallet;
 
   nftClient: Client;
 

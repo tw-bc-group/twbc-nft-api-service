@@ -24,7 +24,7 @@ export const newBaseTx = (baseTx?: Partial<BaseTx>): BaseTx => {
 };
 
 class IritaKeyDAO implements KeyDAO {
-  private wallets = DB.wallets;
+  private wallets = DB.wallet;
 
   async write(name: string, key: Key): Promise<void> {
     await this.wallets.create({
