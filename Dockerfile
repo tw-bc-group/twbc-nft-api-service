@@ -14,4 +14,4 @@ EXPOSE 3000
 
 RUN npx prisma generate
 
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "./commands/boot.sh"]
