@@ -7,6 +7,10 @@ export const generateDenomId = (): string => `thoughtworks${uuid().replace(/-/g,
 
 export const generateNftId = (count: number): string => `nft${uuid().replace(/-/g, '')}${count.toString().padStart(10, '0')}`;
 
+export const generateNftIdByExistsCollectionId = (cid:string, count: number): string => `nft${cid}${count.toString().padStart(10, '0')}`;
+
+export const generateCollectionId = (): string => `nft${uuid().replace(/-/g, '')}`;
+
 export const newBaseTx = (baseTx?: Partial<BaseTx>): BaseTx => {
   const amount = config.nodeEnv === 'production' ? '100000' : '200000';
   const defaultBaseTx: BaseTx = {
