@@ -2,13 +2,13 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
+import { Router } from 'express';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { NODE_ENV, APP_PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
-import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
 import authMiddleware from '@middlewares/auth.middleware';
@@ -18,13 +18,15 @@ class App {
   public env: string;
   public port: string | number;
 
-  constructor(routes: Routes[]) {
+  constructor(router: Router) {
     this.app = express();
     this.env = NODE_ENV || 'development';
     this.port = APP_PORT || 3000;
 
     this.initializeMiddlewares();
-    this.initializeRoutes(routes);
+
+    this.app.use('/', router)
+
     this.initializeSwagger();
     this.initializeErrorHandling();
   }
@@ -34,7 +36,7 @@ class App {
       logger.info(`=================================`);
       logger.info(`======= ENV: ${this.env} =======`);
       logger.info(`🚀 App listening on the port ${this.port}`);
-      logger.info(`=================================`);
+      logger.info('=================================');
     });
   }
 
@@ -53,12 +55,6 @@ class App {
     this.app.use(cookieParser());
 
     this.app.use(authMiddleware);
-  }
-
-  private initializeRoutes(routes: Routes[]) {
-    routes.forEach(route => {
-      this.app.use('/', route.router);
-    });
   }
 
   private initializeSwagger() {
