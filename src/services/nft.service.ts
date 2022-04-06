@@ -40,7 +40,7 @@ class NftService {
     nftName: string,
     imageUrl: string,
     count: number,
-  ): Promise<{ hash: string }> {
+  ): Promise<{ denomId: string, nftIds: string[], hash: string }> {
     // TODO find current user info from DB
     const creatorAddress = await this.nftClient.keys.show(userId.toString());
     const creatorName = userName;
@@ -55,8 +55,8 @@ class NftService {
         name: denomName,
         schema,
         sender,
-        updateRestricted: true,
         mintRestricted: true,
+        updateRestricted: true,
       },
     };
 
@@ -103,7 +103,12 @@ class NftService {
       },
       gas: amount,
     });
-    return await this.nftClient.tx.buildAndSend(msgs, realTx);
+    const response = await this.nftClient.tx.buildAndSend(msgs, realTx);
+    return {
+      denomId,
+      nftIds: mintNftMsgs.map(msg => msg.value.id),
+      hash: response.hash,
+    }
   }
 
   /**
