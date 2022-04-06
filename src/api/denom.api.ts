@@ -35,8 +35,8 @@ denomAPI.post(baseUrl, async (req: Request, res: Response) => {
   res.json(record);
 });
 
-denomAPI.put(`${baseUrl}/:id(\\d+)`, async (req: Request, res: Response) => {
-  const { id } = req.params;
+denomAPI.put(`${baseUrl}/:no`, async (req: Request, res: Response) => {
+  const { no } = req.params;
   const { status } = req.body;
 
   const record = await db.subject.update({
@@ -44,7 +44,7 @@ denomAPI.put(`${baseUrl}/:id(\\d+)`, async (req: Request, res: Response) => {
       status,
     },
     where: {
-      id: Number(id),
+      no,
     },
   });
 
