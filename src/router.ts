@@ -1,5 +1,4 @@
 import type { Handler } from 'express';
-
 import { Router } from 'express';
 import AuthController from '@controllers/auth.controller';
 import FileController from '@controllers/file.controller';
