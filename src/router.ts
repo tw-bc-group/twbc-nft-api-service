@@ -16,7 +16,6 @@ import { CreateUserDto } from '@dtos/users.dto';
 const router = Router();
 
 const fileController = new FileController();
-const authController = new AuthController();
 const indexController = new IndexController();
 const nftController = new NftController();
 const usersController = new UsersController();
@@ -28,8 +27,7 @@ interface Route {
 }
 
 const routes: Route[] = [
-  //auth
-  { method: 'post', path: '/auth/login', handlers: [authController.logIn] },
+  //file
   { method: 'get', path: '/file/presigned-url', handlers: [validationMiddleware(PresignedUrlDto, 'query'), fileController.getPresignedUrl] },
 
   //index
