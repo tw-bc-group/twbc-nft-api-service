@@ -1,9 +1,6 @@
 import { IsString, IsInt } from 'class-validator';
 
-export class CreateNftDto {
-  @IsString()
-  public denomName: string;
-
+export class CreateDenomNftDto {
   @IsString()
   public name: string;
 

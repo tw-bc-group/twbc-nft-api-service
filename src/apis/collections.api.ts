@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { generateCollectionId } from '@clients/nft';
+import { generateCollectionId, generateDenomId, client, newBaseTx, generateSchema, getAdminAddress, generateCollectionNftId } from '@clients/nft';
 import db from '@databases';
+import { RequestWithUser } from '@interfaces/auth.interface';
+import { Nft } from '@interfaces/nft.interface';
+import dayjs from 'dayjs';
 
 const api = Router();
 
@@ -8,20 +11,19 @@ const baseUrl = '/denoms/:dno/collections';
 
 api.get(baseUrl, async (req: Request, res: Response) => {
   const { dno } = req.params;
-
   const subject = await db.subject.findUnique({
     where: { no: dno },
     include: {
       collections: true,
     },
   });
-
-  res.json(subject.collections);
+  res.json(subject?.collections ?? []);
 });
 
 api.post(baseUrl, async (req: Request, res: Response) => {
   const { dno } = req.params;
-  const { name, description, issueTotal, url } = req.body;
+  const { name, description, url } = req.body;
+  const issueTotal = parseInt(req.body.issueTotal);
 
   const subject = await db.subject.findUnique({
     where: { no: dno },
@@ -33,7 +35,7 @@ api.post(baseUrl, async (req: Request, res: Response) => {
       description,
       issueTotal,
       no: generateCollectionId(),
-      issueRemain: 0,
+      issueRemain: issueTotal,
       subject: {
         connect: { id: subject.id },
       },
@@ -50,9 +52,9 @@ api.post(baseUrl, async (req: Request, res: Response) => {
   res.json(collection);
 });
 
-api.post(`${baseUrl}/:cno/apply`, async (req: Request, res: Response, next: NextFunction) => {
+api.post(`${baseUrl}/:cno/apply`, async (req: RequestWithUser, res: Response, next: NextFunction) => {
   const { dno, cno } = req.params;
-  const { userId } = req.body;
+  const { name, salesTime } = req.body;
 
   const subject = await db.subject.findUnique({
     where: { no: dno },
@@ -60,27 +62,55 @@ api.post(`${baseUrl}/:cno/apply`, async (req: Request, res: Response, next: Next
 
   const collection = await db.collection.findUnique({
     where: { no: cno },
+    include: {
+      resource: true,
+    }
   });
 
   if (subject?.status != 1) {
     next(500)
   }
 
-  // TODO(adam): mint nft to user's wallet address. thx
+  const userName = req.user.email;
+  const userWallet = await client.keys.show(req.user.id.toString());
+  const denomName = subject.name;
+  const nftId = generateCollectionNftId(cno, collection.issueTotal - collection.issueRemain + 1)
+  const data: Nft = {
+    nft: {
+      id: nftId,
+      name: name,
+    },
+    denom: {
+      id: dno,
+      name: denomName,
+    },
+    creator: {
+      wallet: userWallet,
+      name: userName,
+    },
+    createdAt: dayjs(salesTime).toISOString(),
+    imageUrl: collection.resource.url,
+  };
+  const response = await client.nft.mintNft(nftId, dno, name, collection.resource.url, JSON.stringify(data), userWallet, newBaseTx());
 
-  const collectionUpdated = await db.collection.update({
+  await db.collection.update({
     where: { id: collection.id },
     data: {
-      issueTotal: {
-        decrement: 1,
-      },
       issueRemain: {
-        increment: 1
+        decrement: 1
       }
     }
   });
+  const mintRecord = await db.mintRecord.create({
+    data: {
+      status: 0,
+      response: JSON.parse(JSON.stringify(response)),
+      userId: req.user.id,
+      collectionId: collection.id,
+    },
+  });
 
-  res.json(collectionUpdated)
+  res.json(mintRecord)
 });
 
 export { api };

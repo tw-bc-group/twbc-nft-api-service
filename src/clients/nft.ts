@@ -13,6 +13,8 @@ export const generateNftIdByExistsCollectionId = (cid:string, count: number): st
 
 export const generateCollectionId = (): string => `nft${uuid().replace(/-/g, '')}`;
 
+export const generateCollectionNftId = (cno: string, no: number): string => `${cno}${no.toString().padStart(10, '0')}`;
+
 export const newBaseTx = (baseTx?: Partial<BaseTx>): BaseTx => {
   const amount = config.nodeEnv === 'production' ? '100000' : '200000';
   const defaultBaseTx: BaseTx = {

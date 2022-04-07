@@ -11,6 +11,6 @@ export interface Nft {
     wallet: string;
     name: string;
   },
-  createdAt: number;
+  createdAt: string;
   imageUrl?: string
 }
