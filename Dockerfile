@@ -15,4 +15,4 @@ EXPOSE 3000
 RUN chmod +x ./commands/boot.sh
 RUN npx prisma generate
 
-CMD ["sh", "-c", "./commands/boot.sh"]
+CMD ["./commands/boot.sh"]
