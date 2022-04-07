@@ -64,7 +64,7 @@ model Collection {
   resourceId Int      @unique @db.Integer
   resource   Resource @relation(fields: [resourceId], references: [id])
 
-  mintRecord MintRecord?
+  mintRecords MintRecord[]
 
   @@index([no])
   @@index([subjectId])
@@ -94,7 +94,7 @@ model MintRecord {
 
   userId       Int
   user         User       @relation(fields: [userId], references: [id])
-  collectionId Int        @unique
+  collectionId Int
   collection   Collection @relation(fields: [collectionId], references: [id])
 
   @@index([userId])
