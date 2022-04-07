@@ -67,8 +67,9 @@ api.post(`${baseUrl}/:cno/apply`, async (req: RequestWithUser, res: Response, ne
     }
   });
 
-  if (subject?.status != 1) {
-    next(500)
+  if (subject?.status != 1 || collection.issueRemain === 0) {
+    next(500);
+    return;
   }
 
   const userName = req.user.email;
@@ -105,9 +106,21 @@ api.post(`${baseUrl}/:cno/apply`, async (req: RequestWithUser, res: Response, ne
     data: {
       status: 0,
       response: JSON.parse(JSON.stringify(response)),
-      userId: req.user.id,
-      collectionId: collection.id,
+      user: {
+        connect: {
+          id: req.user.id,
+        }
+      },
+      collection: {
+        connect: {
+          id: collection.id
+        }
+      },
     },
+    include: {
+      user: true,
+      collection: true,
+    }
   });
 
   res.json(mintRecord)
