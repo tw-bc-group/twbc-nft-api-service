@@ -32,6 +32,8 @@ api.post(baseUrl, async (req: Request, res: Response) => {
     },
   });
 
+  // TODO(adam): need issue denom on blockchain. thx
+
   res.json(record);
 });
 
