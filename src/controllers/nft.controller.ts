@@ -3,7 +3,6 @@ import NftService from '@services/nft.service';
 import { mock } from '@utils/mock';
 import { RequestWithUser } from '@interfaces/auth.interface';
 
-
 class NftController {
   public nftService = new NftService();
 
@@ -26,7 +25,7 @@ class NftController {
 
   public getNftById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const nft = await this.nftService.findNftById(req.params.denomId, req.params.id)
+      const nft = await this.nftService.findNftById(req.params.denomId, req.params.id);
       res.status(200).json(nft);
     } catch (error) {
       next(error);
@@ -41,8 +40,8 @@ class NftController {
       const count = parseInt(req.body.count);
       const userId = req.user.id;
       const userName = req.user.email;
-      const response = await this.nftService.createNft(userId, userName, denomName, nftName, imageUrl, count);
-      res.status(200).json(response);
+      const response = await this.nftService.createDenomAndNft(userId, userName, denomName, nftName, imageUrl, count);
+      res.status(201).json(response);
     } catch (error) {
       next(error);
     }

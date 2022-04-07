@@ -1,9 +1,8 @@
 import { Nft } from '@interfaces/nft.interface';
 import { HttpException } from '@exceptions/HttpException';
-import { generateDenomId, generateNftId, newBaseTx, client, getAdminAddress } from '@clients/nft';
+import { generateDenomId, generateNftId, newBaseTx, client, getAdminAddress, generateSchema } from '@clients/nft';
 import { TxType, Client } from '@irita/irita-sdk';
-import * as TJS from 'typescript-json-schema';
-import { resolve } from 'path';
+
 
 class NftService {
   nftClient: Client;
@@ -12,15 +11,20 @@ class NftService {
     this.nftClient = nftClient ?? client;
   }
 
-  private generateSchema() {
-    const settings: TJS.PartialArgs = {
-      required: true,
+  /**
+   * issue denom
+   * @param denomName string denom name
+   * @returns Transaction hash string
+   */
+  public async issueDenom(name: string): Promise<{ denomId: string; hash: string }> {
+    const denomId = generateDenomId();
+    const schema = generateSchema();
+    const baseTx = newBaseTx();
+    const response = await this.nftClient.nft.issueDenom(denomId, name, schema, true, true, baseTx);
+    return {
+      denomId,
+      hash: response.hash,
     };
-    const compilerOptions: TJS.CompilerOptions = {
-      strictNullChecks: true,
-    };
-    const program = TJS.getProgramFromFiles([resolve('src/interfaces/nft.interface.ts')], compilerOptions);
-    return JSON.stringify(TJS.generateSchema(program, 'Nft', settings));
   }
 
   /**
@@ -33,21 +37,20 @@ class NftService {
    * @param count number number of NFT to be minted
    * @returns Transaction hash string
    */
-  public async createNft(
+  public async createDenomAndNft(
     userId: number,
     userName: string,
     denomName: string,
     nftName: string,
     imageUrl: string,
     count: number,
-  ): Promise<{ denomId: string, nftIds: string[], hash: string }> {
-    // TODO find current user info from DB
+  ): Promise<{ denomId: string; nftIds: string[]; hash: string }> {
     const creatorAddress = await this.nftClient.keys.show(userId.toString());
     const creatorName = userName;
     const baseTx = newBaseTx();
     const sender = await getAdminAddress();
     const denomId = generateDenomId();
-    const schema = this.generateSchema();
+    const schema = generateSchema();
     const issueDenomMsg = {
       type: TxType.MsgIssueDenom,
       value: {
@@ -108,7 +111,7 @@ class NftService {
       denomId,
       nftIds: mintNftMsgs.map(msg => msg.value.id),
       hash: response.hash,
-    }
+    };
   }
 
   /**

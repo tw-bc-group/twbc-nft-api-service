@@ -2,6 +2,8 @@ import config from '@config';
 import { Key, KeyDAO, BaseTx, PubkeyType, newClient, Tx, Client, SdkError } from '@irita/irita-sdk';
 import { v4 as uuid } from 'uuid';
 import DB from '@databases';
+import * as TJS from 'typescript-json-schema';
+import { resolve } from 'path';
 
 export const generateDenomId = (): string => `thoughtworks${uuid().replace(/-/g, '')}`;
 
@@ -76,3 +78,14 @@ export const getAdminAddress = async (): Promise<string> => {
     }
   }
 };
+
+export const generateSchema = () => {
+  const settings: TJS.PartialArgs = {
+    required: true,
+  };
+  const compilerOptions: TJS.CompilerOptions = {
+    strictNullChecks: true,
+  };
+  const program = TJS.getProgramFromFiles([resolve('src/interfaces/nft.interface.ts')], compilerOptions);
+  return JSON.stringify(TJS.generateSchema(program, 'Nft', settings));
+}

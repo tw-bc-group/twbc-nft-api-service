@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import dayjs from 'dayjs';
-import { generateDenomId } from '@clients/nft';
+import { generateDenomId, client, newBaseTx, generateSchema } from '@clients/nft';
 import db from '@databases';
 
 const api = Router();
@@ -32,7 +32,10 @@ api.post(baseUrl, async (req: Request, res: Response) => {
     },
   });
 
-  // TODO(adam): need issue denom on blockchain. thx
+  const schema = generateSchema();
+  const baseTx = newBaseTx();
+  // Save response.hash to db?
+  await client.nft.issueDenom(no, name, schema, true, true, baseTx);
 
   res.json(record);
 });
