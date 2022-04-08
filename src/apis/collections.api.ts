@@ -16,8 +16,8 @@ api.get(baseUrl, async (req: Request, res: Response) => {
     include: {
       collections: {
         include: {
-          resource: true
-        }
+          resource: true,
+        },
       },
     },
   });
@@ -58,7 +58,7 @@ api.post(baseUrl, async (req: Request, res: Response) => {
 
 api.post(`${baseUrl}/:cno/apply`, async (req: RequestWithUser, res: Response, next: NextFunction) => {
   const { dno, cno } = req.params;
-  const { name, salesTime } = req.body;
+  const { name, salesTime, email } = req.body;
 
   const subject = await db.subject.findUnique({
     where: { no: dno },
@@ -68,7 +68,7 @@ api.post(`${baseUrl}/:cno/apply`, async (req: RequestWithUser, res: Response, ne
     where: { no: cno },
     include: {
       resource: true,
-    }
+    },
   });
 
   if (subject?.status != 1 || collection.issueRemain === 0) {
@@ -76,10 +76,17 @@ api.post(`${baseUrl}/:cno/apply`, async (req: RequestWithUser, res: Response, ne
     return;
   }
 
-  const userName = req.user.email;
-  const userWallet = await client.keys.show(req.user.id.toString());
+  let mintUser = req.user;
+  if (email) {
+    mintUser = await db.user.findUnique({
+      where: { email: email },
+    });
+  }
+
+  const userName = mintUser.email;
+  const userWallet = await client.keys.show(mintUser.id.toString());
   const denomName = subject.name;
-  const nftId = generateCollectionNftId(cno, collection.issueTotal - collection.issueRemain + 1)
+  const nftId = generateCollectionNftId(cno, collection.issueTotal - collection.issueRemain + 1);
   const data: Nft = {
     nft: {
       id: nftId,
@@ -102,9 +109,9 @@ api.post(`${baseUrl}/:cno/apply`, async (req: RequestWithUser, res: Response, ne
     where: { id: collection.id },
     data: {
       issueRemain: {
-        decrement: 1
-      }
-    }
+        decrement: 1,
+      },
+    },
   });
   const mintRecord = await db.mintRecord.create({
     data: {
@@ -112,22 +119,22 @@ api.post(`${baseUrl}/:cno/apply`, async (req: RequestWithUser, res: Response, ne
       response: JSON.parse(JSON.stringify(response)),
       user: {
         connect: {
-          id: req.user.id,
-        }
+          id: mintUser.id,
+        },
       },
       collection: {
         connect: {
-          id: collection.id
-        }
+          id: collection.id,
+        },
       },
     },
     include: {
       user: true,
       collection: true,
-    }
+    },
   });
 
-  res.json(mintRecord)
+  res.json(mintRecord);
 });
 
 export { api };
