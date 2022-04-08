@@ -6,7 +6,7 @@ const api = Router();
 const baseUrl = '/mintRecords';
 
 api.get(baseUrl, async (req: Request, res: Response) => {
-  const { email } = req.body;
+  const { email } = req.query;
   const user = await db.user.findUnique({
     where: { email },
     include: {
