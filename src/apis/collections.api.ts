@@ -14,7 +14,11 @@ api.get(baseUrl, async (req: Request, res: Response) => {
   const subject = await db.subject.findUnique({
     where: { no: dno },
     include: {
-      collections: true,
+      collections: {
+        include: {
+          resource: true
+        }
+      },
     },
   });
   res.json(subject?.collections ?? []);
