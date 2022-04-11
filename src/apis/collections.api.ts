@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { generateCollectionId, generateDenomId, client, newBaseTx, generateSchema, getAdminAddress, generateCollectionNftId } from '@clients/nft';
+import { generateCollectionId, generateDenomId, client, newBaseTx, generateSchema, getAdminAddress, generateCollectionNftId, mintAndTransfer } from '@clients/nft';
 import db from '@databases';
 import { RequestWithUser } from '@interfaces/auth.interface';
 import { Nft } from '@interfaces/nft.interface';
@@ -87,7 +87,7 @@ api.post(`${baseUrl}/:cno/apply`, async (req: RequestWithUser, res: Response, ne
   const userWallet = await client.keys.show(mintUser.id.toString());
   const denomName = subject.name;
   const nftId = generateCollectionNftId(cno, collection.issueTotal - collection.issueRemain + 1);
-  const data: Nft = {
+  const nft: Nft = {
     nft: {
       id: nftId,
       name: name,
@@ -103,7 +103,7 @@ api.post(`${baseUrl}/:cno/apply`, async (req: RequestWithUser, res: Response, ne
     createdAt: dayjs(salesTime).toISOString(),
     imageUrl: collection.resource.url,
   };
-  const response = await client.nft.mintNft(nftId, dno, name, collection.resource.url, JSON.stringify(data), userWallet, newBaseTx());
+  const response = await mintAndTransfer(nft);
 
   await db.collection.update({
     where: { id: collection.id },
