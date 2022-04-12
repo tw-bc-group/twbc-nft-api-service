@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { generateCollectionId, generateDenomId, client, newBaseTx, generateSchema, getAdminAddress, generateCollectionNftId, mintAndTransfer } from '@clients/nft';
+import { generateCollectionId, client, generateCollectionNftId, mintAndTransfer } from '@clients/nft';
 import db from '@databases';
 import { RequestWithUser } from '@interfaces/auth.interface';
 import { Nft } from '@interfaces/nft.interface';
@@ -17,6 +17,7 @@ api.get(baseUrl, async (req: Request, res: Response) => {
       collections: {
         include: {
           resource: true,
+          mintRecords: true,
         },
       },
     },
@@ -116,6 +117,7 @@ api.post(`${baseUrl}/:cno/apply`, async (req: RequestWithUser, res: Response, ne
   const mintRecord = await db.mintRecord.create({
     data: {
       status: 0,
+      no: nftId,
       response: JSON.parse(JSON.stringify(response)),
       user: {
         connect: {

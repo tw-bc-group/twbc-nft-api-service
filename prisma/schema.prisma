@@ -88,6 +88,7 @@ model Resource {
 
 model MintRecord {
   id       Int  @id @default(autoincrement())
+  no       String   @unique @db.VarChar(100)
   status   Int  @db.SmallInt
   response Json
   createdAt   DateTime @default(now())
