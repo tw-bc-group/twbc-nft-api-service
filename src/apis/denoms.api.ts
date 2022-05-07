@@ -1,6 +1,6 @@
-import { Request, Response, Router } from 'express';
+import {Request, Response, Router} from 'express';
 import dayjs from 'dayjs';
-import { generateDenomId, client, newBaseTx, generateSchema } from '@clients/nft';
+import {client, generateDenomId, generateSchema, newBaseTx} from '@clients/nft';
 import db from '@databases';
 
 const api = Router();
@@ -10,8 +10,8 @@ const baseUrl = '/denoms';
 api.get(baseUrl, async (_: Request, res: Response) => {
   const records = await db.subject.findMany({
     orderBy: {
-      createdAt: 'desc'
-    }
+      createdAt: 'desc',
+    },
   });
 
   res.json(records);

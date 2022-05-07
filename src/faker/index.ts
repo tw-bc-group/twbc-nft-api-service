@@ -35,7 +35,7 @@ function fakeNFT(name, count) {
 function fakeMint(list, count) {
   const denom = fakeDenom();
   const nftName = faker.commerce.productName();
-  for (var i = 0; i < count; i++) {
+  for (let i = 0; i < count; i++) {
     const item = {
       denom: denom,
       nft: fakeNFT(nftName, i),
@@ -47,8 +47,8 @@ function fakeMint(list, count) {
   return list;
 }
 
-let list = []
-fakeMint(list, 100)
-fakeMint(list, 100)
+const list = [];
+fakeMint(list, 100);
+fakeMint(list, 100);
 
 console.log(JSON.stringify(list, null, 2));

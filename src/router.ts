@@ -1,6 +1,5 @@
-import type { Handler } from 'express';
-import { Router } from 'express';
-import AuthController from '@controllers/auth.controller';
+import type {Handler} from 'express';
+import {Router} from 'express';
 import FileController from '@controllers/file.controller';
 import IndexController from '@controllers/index.controller';
 import NftController from '@controllers/nft.controller';
@@ -8,10 +7,10 @@ import UsersController from '@controllers/users.controller';
 
 import validationMiddleware from '@/middlewares/validation.middleware';
 
-import { PresignedUrlDto } from '@/dtos/file/presignedUrl.dto';
-import { CreateNftDto } from '@dtos/nft/createnft.dto';
-import { TransferNftDto } from '@dtos/nft/transfernft.dto';
-import { CreateUserDto } from '@dtos/users.dto';
+import {PresignedUrlDto} from '@/dtos/file/presignedUrl.dto';
+import {CreateNftDto} from '@dtos/nft/createnft.dto';
+import {TransferNftDto} from '@dtos/nft/transfernft.dto';
+import {CreateUserDto} from '@dtos/users.dto';
 
 const router = Router();
 

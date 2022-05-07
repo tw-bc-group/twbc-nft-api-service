@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response } from 'express';
-import { CreateUserDto } from '@dtos/users.dto';
-import { User } from '@prisma/client'
+import {NextFunction, Request, Response} from 'express';
+import {CreateUserDto} from '@dtos/users.dto';
+import {User} from '@prisma/client';
 import userService from '@services/users.service';
 
 class UsersController {
@@ -10,7 +10,7 @@ class UsersController {
     try {
       const findAllUsersData: User[] = await this.userService.findAllUser();
 
-      res.status(200).json({ data: findAllUsersData, message: 'findAll' });
+      res.status(200).json({data: findAllUsersData, message: 'findAll'});
     } catch (error) {
       next(error);
     }

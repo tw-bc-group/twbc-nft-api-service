@@ -1,8 +1,7 @@
-import { Nft } from '@interfaces/nft.interface';
-import { HttpException } from '@exceptions/HttpException';
-import { generateDenomId, generateNftId, newBaseTx, client, getAdminAddress, generateSchema } from '@clients/nft';
-import { TxType, Client } from '@irita/irita-sdk';
-
+import {Nft} from '@interfaces/nft.interface';
+import {HttpException} from '@exceptions/HttpException';
+import {client, generateDenomId, generateNftId, generateSchema, getAdminAddress, newBaseTx} from '@clients/nft';
+import {Client, TxType} from '@irita/irita-sdk';
 
 class NftService {
   nftClient: Client;

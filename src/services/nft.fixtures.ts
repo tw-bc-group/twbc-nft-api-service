@@ -4,10 +4,7 @@ export const queryOwnerResponse = {
     idCollectionsList: [
       {
         denomId: 'thoughtworksbaefd7830500409d90cfd6bec01d3e3d',
-        tokenIdsList: [
-          'nftf0c7dc6fe6b047729b41bee9d4bfb38c0000000001',
-          'nftddbfe293fbda44f08bdfa2122690e7220000000002'
-        ],
+        tokenIdsList: ['nftf0c7dc6fe6b047729b41bee9d4bfb38c0000000001', 'nftddbfe293fbda44f08bdfa2122690e7220000000002'],
       },
     ],
   },
@@ -18,7 +15,8 @@ export const queryCollectionResponse = {
     denom: {
       id: 'thoughtworksbaefd7830500409d90cfd6bec01d3e3d',
       name: 'Test Denom',
-      schema: '{"type":"object","properties":{"nft":{"type":"object","properties":{"id":{"type":"string"},"name":{"type":"string"}},"required":["id","name"]},"denom":{"type":"object","properties":{"id":{"type":"string"},"name":{"type":"string"}},"required":["id","name"]},"creator":{"type":"object","properties":{"wallet":{"type":"string"},"name":{"type":"string"}},"required":["name","wallet"]},"createdAt":{"type":"number"},"imageUrl":{"type":"string"}},"required":["createdAt","creator","denom","nft"],"$schema":"http://json-schema.org/draft-07/schema#"}',
+      schema:
+        '{"type":"object","properties":{"nft":{"type":"object","properties":{"id":{"type":"string"},"name":{"type":"string"}},"required":["id","name"]},"denom":{"type":"object","properties":{"id":{"type":"string"},"name":{"type":"string"}},"required":["id","name"]},"creator":{"type":"object","properties":{"wallet":{"type":"string"},"name":{"type":"string"}},"required":["name","wallet"]},"createdAt":{"type":"number"},"imageUrl":{"type":"string"}},"required":["createdAt","creator","denom","nft"],"$schema":"http://json-schema.org/draft-07/schema#"}',
       creator: 'iaa1uhajlcjxtkzq7g6uey4hqvukru9n2t4nfxe3pr',
     },
     nftsList: [

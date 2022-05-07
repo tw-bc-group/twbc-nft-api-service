@@ -1,12 +1,11 @@
-import { client, generateDenomId, generateNftId, getAdminAddress } from '@clients/nft';
-import { v4 as uuid } from 'uuid';
+import {client, generateDenomId, generateNftId} from '@clients/nft';
 
 // describe('Keystore queries', () => {
-  // it('Should be able to get admin address', async () => {
-    // TODO should fake DB to get key
-    // const key = await getAdminAddress();
-    // expect(typeof key).toEqual('string');
-  // });
+// it('Should be able to get admin address', async () => {
+// TODO should fake DB to get key
+// const key = await getAdminAddress();
+// expect(typeof key).toEqual('string');
+// });
 // });
 
 describe('NFT queries', () => {
@@ -16,7 +15,7 @@ describe('NFT queries', () => {
   }, 5000);
 
   it('queryOwner', async () => {
-    const key = 'iaa1uhajlcjxtkzq7g6uey4hqvukru9n2t4nfxe3pr'
+    const key = 'iaa1uhajlcjxtkzq7g6uey4hqvukru9n2t4nfxe3pr';
     const response = await client.nft.queryOwner(key);
     expect(response).toHaveProperty('owner');
   }, 5000);

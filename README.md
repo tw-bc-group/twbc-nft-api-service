@@ -69,12 +69,10 @@ Here is a sample TOC(*wow! such cool!*) that is actually the TOC for this README
 
 # Installation
 [(Back to top)](#table-of-contents)
+```
+npm install
+```
 
-* Run the Server in production mode : `npm run start` or `Start typescript-express-starter`
-* Run the Server in development mode : `npm run dev` or Dev `typescript-express-starter`
-* Run all unit-tests : `npm test` or `Test typescript-express-starter`
-* Check for linting errors : `npm run lint` or `Lint typescript-express-starter`
-* Fix for linting : `npm run lint:fix` or `Lint:Fix typescript-express-starter`
 
 <!-- *You might have noticed the **Back to top** button(if not, please notice, it's right there!). This is a good idea because it makes your README **easy to navigate.***
 
@@ -95,11 +93,29 @@ To use this project, first clone the repo on your device using the command below
 ```git clone https://github.com/navendu-pottekkat/nsfw-filter.git``` -->
 
 # Usage
+
 [(Back to top)](#table-of-contents)
+
+Before start, you have to make sure that your database is running
+
+And, we also need to provide some environment variables for system use such as db url; password etc.
+
+Due to the security sake, we ignore the `.env` files for git
+
+You need to create one in your local project directory
+
+You can refer to `.env.template` file for setting proper environment variables accordingly
+
+* Run the Server in production mode : `npm run start` or `Start typescript-express-starter`
+* Run the Server in development mode : `npm run dev` or Dev `typescript-express-starter`
+* Run all unit-tests : `npm test` or `Test typescript-express-starter`
+* Check for linting errors : `npm run lint` or `Lint typescript-express-starter`
+* Fix for linting : `npm run lint:fix` or `Lint:Fix typescript-express-starter`
 
 <!-- This is optional and it is used to give the user info on how to use the project after installation. This could be added in the Installation section also. -->
 
 # Development
+
 [(Back to top)](#table-of-contents)
 
 <!-- This is the place where you give instructions to developers on how to modify the code.

@@ -1,16 +1,15 @@
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import express from 'express';
-import { Router } from 'express';
+import express, {Router} from 'express';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import { NODE_ENV, APP_PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
+import {APP_PORT, CREDENTIALS, LOG_FORMAT, NODE_ENV, ORIGIN} from '@config';
 import errorMiddleware from '@middlewares/error.middleware';
-import { logger, stream } from '@utils/logger';
+import {logger, stream} from '@utils/logger';
 import authMiddleware from '@middlewares/auth.middleware';
 
 class App {
@@ -25,7 +24,7 @@ class App {
 
     this.initializeMiddlewares();
 
-    this.app.use('/', router)
+    this.app.use('/', router);
 
     this.initializeSwagger();
     this.initializeErrorHandling();

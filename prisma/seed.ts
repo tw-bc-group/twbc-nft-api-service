@@ -1,7 +1,7 @@
 import prisma from '../src/databases';
 
 // users
-const createUserFunc = prisma.users.create({
+const createUserFunc = prisma.user.create({
   data: {
     id: 1,
     email: 'adam.wong@thoughtworks.com',
@@ -9,7 +9,7 @@ const createUserFunc = prisma.users.create({
   },
 });
 
-const createWalletsFunc = prisma.wallets.createMany({
+const createWalletsFunc = prisma.wallet.createMany({
   data: [
     {
       id: 1,

@@ -1,11 +1,10 @@
 import config from '@config';
-import { Key, KeyDAO, BaseTx, PubkeyType, newClient, Tx, Client, SdkError } from '@irita/irita-sdk';
-import { v4 as uuid } from 'uuid';
+import {BaseTx, Key, KeyDAO, newClient, PubkeyType, SdkError, TxResult, TxType} from '@irita/irita-sdk';
+import {v4 as uuid} from 'uuid';
 import DB from '@databases';
 import * as TJS from 'typescript-json-schema';
-import { resolve } from 'path';
-import { TxType, TxResult } from '@irita/irita-sdk';
-import { Nft } from '@interfaces/nft.interface';
+import {resolve} from 'path';
+import {Nft} from '@interfaces/nft.interface';
 
 class IritaKeyDAO implements KeyDAO {
   private wallets = DB.wallet;
@@ -41,7 +40,7 @@ export const generateDenomId = (): string => `thoughtworks${uuid().replace(/-/g,
 
 export const generateNftId = (count: number): string => `nft${uuid().replace(/-/g, '')}${count.toString().padStart(10, '0')}`;
 
-export const generateNftIdByExistsCollectionId = (cid:string, count: number): string => `nft${cid}${count.toString().padStart(10, '0')}`;
+export const generateNftIdByExistsCollectionId = (cid: string, count: number): string => `nft${cid}${count.toString().padStart(10, '0')}`;
 
 export const generateCollectionId = (): string => `nft${uuid().replace(/-/g, '')}`;
 
@@ -56,7 +55,7 @@ export const generateSchema = () => {
   };
   const program = TJS.getProgramFromFiles([resolve('src/interfaces/nft.interface.ts')], compilerOptions);
   return JSON.stringify(TJS.generateSchema(program, 'Nft', settings));
-}
+};
 
 export const getAdminAddress = async (): Promise<string> => {
   try {
@@ -121,7 +120,7 @@ export const mintAndTransfer = async (nft: Nft): Promise<TxResult> => {
     gas: amount,
   });
   return await client.tx.buildAndSend(msgs, realBaseTx);
-}
+};
 
 // Instantiate client
 const headers = config.irita.apiKey && { headers: { 'x-api-key': config.irita.apiKey } };
