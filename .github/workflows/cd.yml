@@ -76,3 +76,10 @@ jobs:
         run: |
           helm -n $KUBE_NAMESPACE upgrade --install $RELEASE_NAME $CHART --set image.tag=$IMAGE_TAG --set image.repository=$ECR_REGISTRY/$ECR_REPOSITORY
 
+      - name: Google Chat Notification
+        uses: Co-qn/google-chat-notification@releases/v1
+        with:
+          name: Build
+          url: ${{ secrets.WEBHOOKTOGCHAT }}
+          status: ${{ job.status }}
+        if: always()
