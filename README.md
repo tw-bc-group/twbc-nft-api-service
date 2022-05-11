@@ -96,7 +96,10 @@ To use this project, first clone the repo on your device using the command below
 
 [(Back to top)](#table-of-contents)
 
-Before start, you have to make sure that your database is running
+Before start, you have to make sure that your database is running:
+
+- Initialize your docker env and create a database in your local
+- Migrate data into your database: `npm run db:migrate:generate`
 
 And, we also need to provide some environment variables for system use such as db url; password etc.
 
@@ -117,6 +120,8 @@ You can refer to `.env.template` file for setting proper environment variables a
 # Development
 
 [(Back to top)](#table-of-contents)
+
+If you want to send request from your local, don't forget to add HTTP header: `Authorization: Bearer 1`
 
 <!-- This is the place where you give instructions to developers on how to modify the code.
 
