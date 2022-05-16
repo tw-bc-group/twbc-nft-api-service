@@ -18,11 +18,6 @@ class UserService {
     this.nftClient = nftClient ?? client;
   }
 
-  public async findAllUser(): Promise<User[]> {
-    const allUser: User[] = await this.users.findMany();
-    return allUser;
-  }
-
   public async findUserById(userId: number): Promise<User> {
     if (isEmpty(userId)) throw new HttpException(400, "You're not userId");
 

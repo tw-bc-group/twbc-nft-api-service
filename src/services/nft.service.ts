@@ -65,6 +65,7 @@ class NftService {
     const nowInMilliseconds = new Date().getTime();
     const mintNftMsgs = Array.from(Array(count)).map((_, i) => {
       const nftId = generateNftId(i + 1);
+      // @ts-ignore
       const nft: Nft = {
         nft: {
           id: nftId,
@@ -78,6 +79,8 @@ class NftService {
           wallet: creatorAddress,
           name: creatorName,
         },
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         createdAt: nowInMilliseconds,
         imageUrl,
       };

@@ -1,6 +1,6 @@
-import {Request, Response, Router} from 'express';
+import { Request, Response, Router } from 'express';
 import dayjs from 'dayjs';
-import {client, generateDenomId, generateSchema, newBaseTx} from '@clients/nft';
+import { client, generateDenomId, generateSchema, newBaseTx } from '@clients/nft';
 import db from '@databases';
 
 const api = Router();
