@@ -1,14 +1,12 @@
 import type { Handler } from 'express';
 import { Router } from 'express';
 import FileController from '@controllers/file.controller';
-import IndexController from '@controllers/index.controller';
 import validationMiddleware from '@/middlewares/validation.middleware';
 import { PresignedUrlDto } from '@/dtos/file/presignedUrl.dto';
 
 const router = Router();
 
 const fileController = new FileController();
-const indexController = new IndexController();
 
 interface Route {
   method: string;
