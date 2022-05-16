@@ -20,8 +20,8 @@ const routes: Route[] = [
   //file
   { method: 'get', path: '/file/presigned-url', handlers: [validationMiddleware(PresignedUrlDto, 'query'), fileController.getPresignedUrl] },
 
-  //index
-  { method: 'get', path: '/', handlers: [indexController.index] },
+  // //index
+  // { method: 'get', path: '/', handlers: [indexController.index] },
 ];
 
 routes.forEach(r => router[r.method](r.path, ...r.handlers));

@@ -7,8 +7,9 @@ import { api as authAPI } from './apis/auth.api';
 import { api as mintRecordsAPI } from './apis/mintRecords.api';
 import { api as usersAPI } from './apis/users.api';
 import { api as nftAPI } from './apis/nft.api';
+import { api as indexAPI } from './apis/index.api';
 
-AppRouter.use(denomAPI, collectionAPI, authAPI, mintRecordsAPI, nftAPI, usersAPI);
+AppRouter.use(denomAPI, collectionAPI, authAPI, mintRecordsAPI, nftAPI, usersAPI, indexAPI);
 
 expressListRoutes(AppRouter);
 const app = new App(AppRouter);
