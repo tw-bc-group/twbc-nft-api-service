@@ -35,7 +35,7 @@ api.post(baseUrl, validationMiddleware(CreateUserDto, 'body'), async (req: Reque
   }
 });
 
-api.post(`${baseUrl}/:id`, async (req: Request, res: Response, next: NextFunction) => {
+api.post(`${baseUrl}/:id`, validationMiddleware(CreateUserDto, 'body'), async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
   const { email, password }: CreateUserDto = req.body;
   const createUserDto = { email, password };

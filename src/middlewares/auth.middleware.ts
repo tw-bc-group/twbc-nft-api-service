@@ -10,8 +10,6 @@ const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFun
     if (req.path === '/login') {
       return next();
     }
-    console.log(req);
-    console.log(req.header('Authorization'));
     const Authorization = req.header('Authorization') ? req.header('Authorization').split('Bearer ')[1] : null;
     if (Authorization) {
       // const verificationResponse = verify(Authorization, SECRET_KEY) as DataStoredInToken;
