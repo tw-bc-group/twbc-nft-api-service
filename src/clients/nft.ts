@@ -1,10 +1,11 @@
 import config from '@config';
-import {BaseTx, Key, KeyDAO, newClient, PubkeyType, SdkError, TxResult, TxType} from '@irita/irita-sdk';
-import {v4 as uuid} from 'uuid';
+import { BaseTx, Key, KeyDAO, newClient, PubkeyType, SdkError, TxResult, TxType } from '@irita/irita-sdk';
+import { v4 as uuid } from 'uuid';
 import DB from '@databases';
 import * as TJS from 'typescript-json-schema';
-import {resolve} from 'path';
-import {Nft} from '@interfaces/nft.interface';
+import { resolve } from 'path';
+import { Nft } from '@interfaces/nft.interface';
+import { Wallet } from '@prisma/client';
 
 class IritaKeyDAO implements KeyDAO {
   private wallets = DB.wallet;
@@ -19,11 +20,15 @@ class IritaKeyDAO implements KeyDAO {
   }
 
   async read(name: string): Promise<Key> {
-    return await this.wallets.findFirst({
+    const wallet = await this.wallets.findFirst({
       where: {
         keyName: name,
       },
     });
+    return {
+      address: wallet?.address || '',
+      privKey: wallet?.privKey || '',
+    };
   }
 
   async delete(name: string): Promise<void> {
@@ -32,7 +37,7 @@ class IritaKeyDAO implements KeyDAO {
         keyName: name,
       },
     });
-    await this.wallets.delete({ where: { id: wallet.id } });
+    await this.wallets.delete({ where: { id: wallet?.id } });
   }
 }
 
@@ -65,6 +70,7 @@ export const getAdminAddress = async (): Promise<string> => {
     if (e instanceof SdkError) {
       return await client.keys.recover(config.irita.adminKeyName, config.irita.keystorePassword, config.irita.adminKeyMnemonic, PubkeyType.sm2);
     }
+    throw e;
   }
 };
 
@@ -111,7 +117,7 @@ export const mintAndTransfer = async (nft: Nft): Promise<TxResult> => {
   ];
   const simulation = await client.tx.simulate(msgs, newBaseTx());
   // Fee multiplier 1.2 recommended by bianjie staff
-  const amount = Math.floor(simulation.gasInfo.gasUsed * 1.2).toString();
+  const amount = Math.floor(simulation.gasInfo.gasUsed ?? 0 * 1.2).toString();
   const realBaseTx = newBaseTx({
     fee: {
       denom: 'ugas',

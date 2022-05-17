@@ -27,7 +27,7 @@ export interface Config {
 }
 
 export const app = {
-  env: process.env.APP_ENV,
+  env: process.env.APP_ENV || 'dev',
   port: process.env.APP_PORT,
 };
 

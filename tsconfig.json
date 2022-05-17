@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "strictNullChecks": true,
     "target": "es2018",
     "lib": ["ES2019", "esnext.asynciterable"],
     "typeRoots": ["node_modules/@types"],

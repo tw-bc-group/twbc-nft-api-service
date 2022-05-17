@@ -4,6 +4,7 @@ import db from '@databases';
 import { RequestWithUser } from '@interfaces/auth.interface';
 import { Nft } from '@interfaces/nft.interface';
 import dayjs from 'dayjs';
+import { User } from '@prisma/client';
 
 const api = Router();
 
@@ -42,7 +43,7 @@ api.post(baseUrl, async (req: Request, res: Response) => {
       no: generateCollectionId(),
       issueRemain: issueTotal,
       subject: {
-        connect: { id: subject.id },
+        connect: { id: subject?.id },
       },
       resource: {
         create: {
@@ -72,22 +73,24 @@ api.post(`${baseUrl}/:cno/apply`, async (req: RequestWithUser, res: Response, ne
     },
   });
 
-  if (subject?.status != 1 || collection.issueRemain === 0) {
+  if (subject?.status != 1 || collection?.issueRemain === 0) {
     next(500);
     return;
   }
 
-  let mintUser = req.user;
+  let mintUser: User | null = req.user;
   if (email) {
     mintUser = await db.user.findUnique({
       where: { email: email },
     });
   }
 
-  const userName = mintUser.email;
-  const userWallet = await client.keys.show(mintUser.id.toString());
-  const denomName = subject.name;
-  const nftId = generateCollectionNftId(cno, collection.issueTotal - collection.issueRemain + 1);
+  const userName = mintUser?.email || '';
+  const userWallet = await client.keys.show(mintUser?.id.toString() || '');
+  const denomName = subject?.name;
+  const total = collection?.issueTotal || 0;
+  const remain = collection?.issueRemain || 0;
+  const nftId = generateCollectionNftId(cno, total - remain + 1) || '';
   const nft: Nft = {
     nft: {
       id: nftId,
@@ -102,12 +105,12 @@ api.post(`${baseUrl}/:cno/apply`, async (req: RequestWithUser, res: Response, ne
       name: userName,
     },
     createdAt: dayjs(salesTime).toISOString(),
-    imageUrl: collection.resource.url,
+    imageUrl: collection?.resource.url,
   };
   const response = await mintAndTransfer(nft);
 
   await db.collection.update({
-    where: { id: collection.id },
+    where: { id: collection?.id },
     data: {
       issueRemain: {
         decrement: 1,
@@ -121,12 +124,12 @@ api.post(`${baseUrl}/:cno/apply`, async (req: RequestWithUser, res: Response, ne
       response: JSON.parse(JSON.stringify(response)),
       user: {
         connect: {
-          id: mintUser.id,
+          id: mintUser?.id,
         },
       },
       collection: {
         connect: {
-          id: collection.id,
+          id: collection?.id,
         },
       },
     },

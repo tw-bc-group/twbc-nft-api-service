@@ -9,4 +9,6 @@ module.exports = {
     '^.+\\.tsx?$': 'ts-jest',
   },
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/src' }),
+  setupFilesAfterEnv: ['<rootDir>/src/tests/singleton.ts'],
+  clearMocks: true,
 };
