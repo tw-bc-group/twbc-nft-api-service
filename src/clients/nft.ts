@@ -115,17 +115,17 @@ export const mintAndTransfer = async (nft: Nft): Promise<TxResult> => {
       },
     },
   ];
-  const simulation = await client.tx.simulate(msgs, newBaseTx());
-  // Fee multiplier 1.2 recommended by bianjie staff
-  const amount = Math.floor(simulation.gasInfo.gasUsed ?? 0 * 1.2).toString();
-  const realBaseTx = newBaseTx({
-    fee: {
-      denom: 'ugas',
-      amount,
-    },
-    gas: amount,
-  });
-  return await client.tx.buildAndSend(msgs, realBaseTx);
+  // const simulation = await client.tx.simulate(msgs, newBaseTx());
+  // // Fee multiplier 1.2 recommended by bianjie staff
+  // const amount = Math.floor(simulation.gasInfo.gasUsed ?? 0 * 1.2).toString();
+  // const realBaseTx = newBaseTx({
+  //   fee: {
+  //     denom: 'ugas',
+  //     amount,
+  //   },
+  //   gas: amount,
+  // });
+  return await client.tx.buildAndSend(msgs, newBaseTx());
 };
 
 // Instantiate client
