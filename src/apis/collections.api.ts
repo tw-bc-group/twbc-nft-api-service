@@ -2,7 +2,6 @@ import { NextFunction, Request, Response, Router } from 'express';
 import { generateCollectionId, client, generateCollectionNftId, mintAndTransfer } from '@clients/nft';
 import db from '@databases';
 import { RequestWithUser } from '@interfaces/auth.interface';
-import { Nft } from '@interfaces/nft.interface';
 import dayjs from 'dayjs';
 import { User } from '@prisma/client';
 
@@ -60,7 +59,7 @@ api.post(baseUrl, async (req: Request, res: Response) => {
 
 api.post(`${baseUrl}/:cno/apply`, async (req: RequestWithUser, res: Response, next: NextFunction) => {
   const { dno, cno } = req.params;
-  const { name, salesTime, email } = req.body;
+  const { email } = req.body;
 
   const subject = await db.subject.findUnique({
     where: { no: dno },
@@ -85,16 +84,19 @@ api.post(`${baseUrl}/:cno/apply`, async (req: RequestWithUser, res: Response, ne
     });
   }
 
+  console.log(mintUser);
+
   const userName = mintUser?.email || '';
   const userWallet = await client.keys.show(mintUser?.id.toString() || '');
   const denomName = subject?.name;
   const total = collection?.issueTotal || 0;
   const remain = collection?.issueRemain || 0;
   const nftId = generateCollectionNftId(cno, total - remain + 1) || '';
-  const nft: Nft = {
+
+  const response = await mintAndTransfer({
     nft: {
       id: nftId,
-      name: name,
+      name: collection?.name ?? '',
     },
     denom: {
       id: dno,
@@ -104,10 +106,9 @@ api.post(`${baseUrl}/:cno/apply`, async (req: RequestWithUser, res: Response, ne
       wallet: userWallet,
       name: userName,
     },
-    createdAt: dayjs(salesTime).toISOString(),
+    createdAt: dayjs(subject.salesTime).toISOString(),
     imageUrl: collection?.resource.url,
-  };
-  const response = await mintAndTransfer(nft);
+  });
 
   await db.collection.update({
     where: { id: collection?.id },

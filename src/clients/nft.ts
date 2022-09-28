@@ -5,7 +5,6 @@ import DB from '@databases';
 import * as TJS from 'typescript-json-schema';
 import { resolve } from 'path';
 import { Nft } from '@interfaces/nft.interface';
-import { Wallet } from '@prisma/client';
 
 class IritaKeyDAO implements KeyDAO {
   private wallets = DB.wallet;
@@ -75,7 +74,7 @@ export const getAdminAddress = async (): Promise<string> => {
 };
 
 export const newBaseTx = (baseTx?: Partial<BaseTx>): BaseTx => {
-  const amount = config.nodeEnv === 'production' ? '100000' : '600000';
+  const amount = config.nodeEnv === 'production' ? '100000' : '400000';
   const defaultBaseTx: BaseTx = {
     from: config.irita.adminKeyName,
     password: config.irita.keystorePassword,
@@ -90,7 +89,23 @@ export const newBaseTx = (baseTx?: Partial<BaseTx>): BaseTx => {
   return defaultBaseTx;
 };
 
+const newBaseTxForMint = (): BaseTx => {
+  const defaultBaseTx: BaseTx = {
+    from: config.irita.adminKeyName,
+    password: config.irita.keystorePassword,
+    pubkeyType: PubkeyType.sm2,
+    fee: {
+      denom: 'ugas',
+      amount: '400000',
+    },
+    gas: '400000',
+  };
+  return defaultBaseTx;
+};
+
+// https://github.com/bianjieai/opb-faq/issues/21
 export const mintAndTransfer = async (nft: Nft): Promise<TxResult> => {
+  console.log('Minting NFT: ', nft);
   const sender = await getAdminAddress();
   const msgs: any[] = [
     {
@@ -102,30 +117,11 @@ export const mintAndTransfer = async (nft: Nft): Promise<TxResult> => {
         uri: nft.imageUrl,
         data: JSON.stringify(nft),
         sender,
-        recipient: sender,
-      },
-    },
-    {
-      type: TxType.MsgTransferNFT,
-      value: {
-        id: nft.nft.id,
-        denom_id: nft.denom.id,
-        sender,
         recipient: nft.creator.wallet,
       },
     },
   ];
-  const simulation = await client.tx.simulate(msgs, newBaseTx());
-  // Fee multiplier 2 recommended by bianjie staff
-  const amount = Math.floor(simulation.gasInfo.gasUsed ?? 0 * 2).toString();
-  const realBaseTx = newBaseTx({
-    fee: {
-      denom: 'ugas',
-      amount,
-    },
-    gas: amount,
-  });
-  return await client.tx.buildAndSend(msgs, realBaseTx);
+  return await client.tx.buildAndSend(msgs, newBaseTxForMint());
 };
 
 // Instantiate client
