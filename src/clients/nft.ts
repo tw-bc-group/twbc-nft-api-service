@@ -75,7 +75,7 @@ export const getAdminAddress = async (): Promise<string> => {
 };
 
 export const newBaseTx = (baseTx?: Partial<BaseTx>): BaseTx => {
-  const amount = config.nodeEnv === 'production' ? '100000' : '400000';
+  const amount = config.nodeEnv === 'production' ? '100000' : '600000';
   const defaultBaseTx: BaseTx = {
     from: config.irita.adminKeyName,
     password: config.irita.keystorePassword,
