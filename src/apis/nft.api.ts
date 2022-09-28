@@ -43,7 +43,7 @@ api.get(`${baseUrl}/:denomId/:id`, async (req: Request, res: Response, next: Nex
       next(new HttpException(409, 'no nft found'));
     }
     const response: any = await client.nft.queryNFT(denomId, nftId);
-    res.status(200).json(response.nft.data);
+    res.status(200).json(JSON.parse(response.nft.data));
   } catch (error) {
     next(error);
   }
